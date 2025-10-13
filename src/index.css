@@ -3,12 +3,14 @@
 
 @tailwind utilities;
 
-/* utilitas custom */
-.bg-menu-selected {
-  @apply bg-[#315071];
+/* index.css atau globals.css */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
 }
-.card {
-  @apply rounded-2xl shadow w-full;
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE dan Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 body {
@@ -54,14 +56,6 @@ body {
   min-width: 0;
   word-wrap: break-word;
   background-clip: border-box;
-}
-
-.bg-gradient-saldo {
-  background: linear-gradient(180deg, #315070 0%, #223a58 100%);
-}
-
-.bg-gradient-referral {
-  background: linear-gradient(180deg, #9cecf8 0%, #7ab9e5 100%);
 }
 
 .bg-primary {

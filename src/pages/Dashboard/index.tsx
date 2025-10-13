@@ -1,97 +1,77 @@
+import WalletInfo from "../../components/WalletInfo";
+import { useWallet } from "../../hooks/useWallet";
 import DownlineTable from "../../components/DownlineTable";
-import DownlineStats from "../../components/DownlineStats";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import PageAlertTop from "../../components/PageAlertTop";
 
 const Dashboard = () => {
+  const { balance, loading, error } = useWallet();
+  const navigate = useNavigate();
+
   return (
-    <div>
-      <div className="flex flex-row items-center justify-between">
-        <h1 className="text-xl font-semibold text-primary">Beranda</h1>
-      </div>
-      <div className="flex flex-row items-center justify-between mt-6 gap-5">
-        <div className="w-full">
-          <p className="font-medium mb-3">Informasi Saldo</p>
-          <div className="card bg-gradient-saldo text-white py-5 px-7 rounded-3xl shadow w-full cursor-pointer">
-            <p className="mb-1 font-light text-sm">Total Saldo</p>
-            <h1 className="font-semibold text-xl">Rp180.000.000</h1>
-          </div>
-        </div>
-        <div className="w-full">
-          <p className="font-medium mb-3">Kode Referral</p>
-          <div className="card bg-gray-200 text-primary py-5 px-7 rounded-3xl shadow cursor-pointer">
-            <div className="flex flex-row items-center justify-between">
-              <div>
-                <p className="mb-1 font-light text-sm">Referral Downline</p>
-                <h1 className="font-semibold text-xl">AWH1P233112</h1>
-              </div>
-              <div>
-                <i className="bx bx-copy text-2xl text-primary"></i>
-              </div>
-            </div>
-          </div>
+    <div className="h-full bg-white">
+      <PageAlertTop />
+      <div
+        className="py-2 cursor-pointer active:scale-[0.98] transition"
+        onClick={() => navigate("/dompet")}
+      >
+        <div className="p-5 pt-0">
+          <WalletInfo balance={balance} loading={loading} error={error} />
         </div>
       </div>
-      <div className="flex flex-row items-center justify-between mt-7 gap-5">
-        <div className="w-full">
-          <div className="flex flex-row mb-3 w-full items-center justify-between">
-            <p className="font-medium">Downline</p>
-            <Link
-              to="/downline"
-              className="text-link flex flex-row items-center ml-3"
-            >
-              <span className="mr-2 text-sm font-normal">Lihat Detail</span>
-              <i className="bx bx-link-external"></i>
-            </Link>
-          </div>
-          <div className="card bg-white text-primary p-6 rounded-3xl shadow cursor-pointer">
-            <DownlineStats />
-            <DownlineTable
-              data={[
-                {
-                  id: 1,
-                  name: "Budi Santoso",
-                  dateCreated: "2025-10-01",
-                  status: "Jumlah",
-                },
-                {
-                  id: 2,
-                  name: "Siti Aisyah",
-                  dateCreated: "2025-09-28",
-                  status: "Persen",
-                },
-                {
-                  id: 3,
-                  name: "Andi Pratama",
-                  dateCreated: "2025-09-30",
-                  status: "Jumlah",
-                },
-                {
-                  id: 4,
-                  name: "Ahmad Bustomi",
-                  dateCreated: "2025-10-1",
-                  status: "Jumlah",
-                },
-                {
-                  id: 5,
-                  name: "Tardi Manalu",
-                  dateCreated: "2025-10-2",
-                  status: "Persen",
-                },
-                {
-                  id: 6,
-                  name: "David Corenswet",
-                  dateCreated: "2025-10-3",
-                  status: "Jumlah",
-                },
-                {
-                  id: 7,
-                  name: "Andrew Garfield",
-                  dateCreated: "2025-10-4",
-                  status: "Persen",
-                },
-              ]}
-            />
-          </div>
+
+      <div className="mt-6">
+        <div className="flex items-center justify-between mb-3">
+          <p className="font-medium text-sm">Downline</p>
+          <Link
+            to="/downline"
+            className="text-link flex items-center gap-2 text-sm"
+          >
+            <span className="font-normal">Lihat Detail</span>
+            <i className="bx bx-link-external" />
+          </Link>
+        </div>
+
+        <div className="card bg-white text-primary p-4 rounded-2xl shadow">
+          <DownlineTable
+            data={[
+              {
+                id: 1,
+                name: "Budi Santoso",
+                dateCreated: "2025-10-01",
+              },
+              {
+                id: 2,
+                name: "Siti Aisyah",
+                dateCreated: "2025-09-28",
+              },
+              {
+                id: 3,
+                name: "Andi Pratama",
+                dateCreated: "2025-09-30",
+              },
+              {
+                id: 4,
+                name: "Ahmad Bustomi",
+                dateCreated: "2025-10-01",
+              },
+              {
+                id: 5,
+                name: "Tardi Manalu",
+                dateCreated: "2025-10-02",
+              },
+              {
+                id: 6,
+                name: "David Corenswet",
+                dateCreated: "2025-10-03",
+              },
+              {
+                id: 7,
+                name: "Andrew Garfield",
+                dateCreated: "2025-10-04",
+              },
+            ]}
+          />
         </div>
       </div>
     </div>
