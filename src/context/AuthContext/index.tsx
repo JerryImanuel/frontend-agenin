@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getMe, login, type LoginPayload } from "../../services/AuthAPI";
+import { login, type LoginPayload } from "../../services/AuthAPI";
 import type { User } from "../../types/User";
 
 type AuthState = {
@@ -34,13 +34,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithPassword = async (p: LoginPayload) => {
     const res = await login(p);
-    setAccessToken(res.accessToken);
-    localStorage.setItem("accessToken", res.accessToken);
-
-    // opsional: ambil profil fresh via /auth/me
-    const me = await getMe(res.accessToken);
-    setUser(me);
-    localStorage.setItem("user", JSON.stringify(me));
+    setAccessToken(res.results.token);
+    localStorage.setItem("accessToken", res.results.token);
   };
 
   const logout = () => {

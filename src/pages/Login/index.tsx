@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
-  const [username, setUsername] = useState("emilys");
-  const [password, setPassword] = useState("emilyspass");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -17,12 +17,12 @@ export default function Login() {
     setErr(null);
     setLoading(true);
     try {
-      await loginWithPassword({ username, password, expiresInMins: 30 });
+      await loginWithPassword({ userIdentifier:username, userPassword:password });
       navigate(location.state?.from || "/", { replace: true });
     } catch (e: any) {
       setErr(
-        typeof e?.publicMessage === "string"
-          ? e.publicMessage
+        typeof e?.message === "string"
+          ? e.message
           : "Terjadi kesalahan. Silakan coba lagi."
       );
     } finally {
@@ -50,8 +50,9 @@ export default function Login() {
             className="w-full border text-sm border-gray-300 rounded-xl px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-sky-900"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="emilys"
+            placeholder="Username"
             required
+            name='userIdentifier'
           />
           <label className="block text-xs font-medium mb-1">Kata Sandi</label>
           <input
@@ -59,8 +60,9 @@ export default function Login() {
             className="w-full border text-sm border-gray-300 rounded-xl px-3 py-2 mb-1 focus:outline-none focus:ring-2 focus:ring-sky-900"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="emilyspass"
+            placeholder="Password"
             required
+            name="userPassword"
           />
 
           {err && (
