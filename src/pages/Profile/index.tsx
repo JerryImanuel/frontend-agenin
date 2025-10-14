@@ -1,33 +1,28 @@
+// src/pages/Profile/index.tsx
 import { useEffect, useState } from "react";
-import { getProfile } from "../../services/AuthAPI/getProfile";
+import { getProfileById, getMyProfile, type UserProfile } from "../../services/AuthAPI/getProfile";
 import { getUserIdFromAuth } from "../../utils/auth";
-import type { UserProfile } from "../../types/User/userprofile";
 
 export default function Profile() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const userId = getUserIdFromAuth(); 
-
   useEffect(() => {
-    async function fetchProfile() {
-      if (!userId) {
-        setError("User belum login atau userId tidak ditemukan.");
-        setLoading(false);
-        return;
-      }
+    (async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const res = await getProfile(userId);
+        const uid = getUserIdFromAuth();
+        const res = uid ? await getProfileById(uid) : await getMyProfile();
         setProfile(res.results);
-      } catch (err: any) {
-        setError(err?.message || "Gagal memuat profil");
+      } catch (e: any) {
+        setError(e?.message || "Gagal memuat profil");
       } finally {
         setLoading(false);
       }
-    }
-    fetchProfile();
-  }, [userId]);
+    })();
+  }, []);
 
   if (loading) return <div className="px-5 py-3">Memuat profil...</div>;
   if (error) return <div className="px-5 py-3 text-red-500">{error}</div>;
