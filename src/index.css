@@ -21,32 +21,12 @@ body {
   scrollbar-color: #e8e8e8 transparent; /* thumb track */ /* Firefox */
 }
 
-.bg-agenin {
-  background-color: #223a58;
+.bg-background-gradient {
+  background: linear-gradient(to bottom, #c3dcf2 10%, #f5f8fe 30%);
 }
 
-.bg-menu-selected {
-  background-color: #315071;
-}
-
-.bg-menu-hover {
-  background-color: #315071;
-}
-
-.shadow-sidebar {
-  box-shadow: 4px 0 10px rgba(160, 160, 160, 0.25);
-}
-
-.bg-light-background {
-  background-color: #f5f8fe;
-}
-
-.text-primary {
-  color: #28415c;
-}
-
-.bg-blue-light {
-  background-color: #c7e0ff;
+.bg-header {
+  background-color: #c3dcf2;
 }
 
 .card {
@@ -56,10 +36,6 @@ body {
   min-width: 0;
   word-wrap: break-word;
   background-clip: border-box;
-}
-
-.bg-primary {
-  background-color: #306cb8;
 }
 
 .text-link {

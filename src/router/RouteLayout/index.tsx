@@ -5,7 +5,9 @@ export default function RootLayout() {
   const location = useLocation();
 
   const isAuthRoute =
-    location.pathname === "/login" || location.pathname.startsWith("/auth");
+    location.pathname === "/login" ||
+    location.pathname === "/register" ||
+    location.pathname.startsWith("/auth");
 
   let headerTitle: string | undefined;
   let showGreeting = false;
@@ -17,11 +19,13 @@ export default function RootLayout() {
     headerTitle = "Downline";
   } else if (location.pathname.startsWith("/produk")) {
     headerTitle = "Produk";
+  } else if (location.pathname.startsWith("/profile")) {
+    headerTitle = "Profile";
   }
 
   return (
-    <div className="h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="relative w-[360px] h-[100dvh] max-h-[690px] bg-white rounded-xl shadow-2xl border border-gray-300 overflow-hidden">
+    <div className="h-screen bg-sky-950 flex items-center justify-center p-4">
+      <div className="relative w-[360px] h-[100dvh] max-h-[690px] bg-header rounded-xl shadow-2xl border border-gray-300 overflow-hidden">
         <div className="flex flex-col h-full">
           {!isAuthRoute && (
             <HeaderBar
@@ -31,7 +35,7 @@ export default function RootLayout() {
             />
           )}
 
-          <main className="flex-1 overflow-y-auto hide-scrollbar">
+          <main className="flex-1 overflow-y-auto hide-scrollbar bg-background-gradient">
             <Outlet />
           </main>
 
@@ -47,8 +51,8 @@ export default function RootLayout() {
                   className={({ isActive }) =>
                     `flex flex-col w-20 items-center justify-center gap-1 px-3 py-2 rounded-xl text-sm ${
                       isActive
-                        ? "bg-gray-100 text-gray-900"
-                        : "text-gray-600 hover:bg-gray-50"
+                        ? "bg-gray-100 text-sky-900"
+                        : "text-gray-500 hover:bg-gray-50"
                     }`
                   }
                 >
@@ -61,8 +65,8 @@ export default function RootLayout() {
                   className={({ isActive }) =>
                     `flex flex-col w-20 items-center justify-center gap-1 px-3 py-2 rounded-xl text-sm ${
                       isActive
-                        ? "bg-gray-100 text-gray-900"
-                        : "text-gray-600 hover:bg-gray-50"
+                        ? "bg-gray-100 text-sky-900"
+                        : "text-gray-500 hover:bg-gray-50"
                     }`
                   }
                 >
@@ -75,8 +79,8 @@ export default function RootLayout() {
                   className={({ isActive }) =>
                     `flex flex-col w-20 items-center justify-center gap-1 px-3 py-2 rounded-xl text-sm ${
                       isActive
-                        ? "bg-gray-100 text-gray-900"
-                        : "text-gray-600 hover:bg-gray-50"
+                        ? "bg-gray-100 text-sky-900"
+                        : "text-gray-500 hover:bg-gray-50"
                     }`
                   }
                 >
@@ -89,8 +93,8 @@ export default function RootLayout() {
                   className={({ isActive }) =>
                     `flex flex-col w-20 items-center justify-center gap-1 px-3 py-2 rounded-xl text-sm ${
                       isActive
-                        ? "bg-gray-100 text-gray-900"
-                        : "text-gray-600 hover:bg-gray-50"
+                        ? "bg-gray-100 text-sky-900"
+                        : "text-gray-500 hover:bg-gray-50"
                     }`
                   }
                 >

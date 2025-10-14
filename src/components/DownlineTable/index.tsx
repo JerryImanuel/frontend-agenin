@@ -6,16 +6,21 @@ type Downline = {
 
 type DownlineTableProps = {
   data: Downline[];
+  compact?: boolean;
 };
 
-const DownlineTable = ({ data }: DownlineTableProps) => {
+const DownlineTable = ({ data, compact = false }: DownlineTableProps) => {
   return (
-    <div className="w-full max-h-60 overflow-auto hide-scrollbar">
+    <div
+      className={`w-full overflow-auto hide-scrollbar ${
+        compact ? "max-h-40" : ""
+      }`}
+    >
       <table className="w-full text-left">
         <thead>
           <tr className="text-gray-500 text-sm captalize tracking-wide border-b border-gray-200 sticky top-0 bg-white">
             <th className="py-2 px-4">Nama</th>
-            <th className="py-2 px-4">Tanggal</th>
+            <th className="py-2 px-4">Jumlah Komisi</th>
           </tr>
         </thead>
         <tbody>

@@ -8,8 +8,18 @@ const Dashboard = () => {
   const { balance, loading, error } = useWallet();
   const navigate = useNavigate();
 
+  const downlineData = [
+    { id: 1, name: "Budi Santoso", dateCreated: "2025-10-01" },
+    { id: 2, name: "Siti Aisyah", dateCreated: "2025-09-28" },
+    { id: 3, name: "Andi Pratama", dateCreated: "2025-09-30" },
+    { id: 4, name: "Ahmad Bustomi", dateCreated: "2025-10-01" },
+    { id: 5, name: "Tardi Manalu", dateCreated: "2025-10-02" },
+    { id: 6, name: "David Corenswet", dateCreated: "2025-10-03" },
+    { id: 7, name: "Andrew Garfield", dateCreated: "2025-10-04" },
+  ];
+
   return (
-    <div className="h-full bg-white">
+    <div className="h-full">
       <PageAlertTop />
       <div
         className="py-2 cursor-pointer active:scale-[0.98] transition"
@@ -20,7 +30,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-2 px-5">
         <div className="flex items-center justify-between mb-3">
           <p className="font-medium text-sm">Downline</p>
           <Link
@@ -32,48 +42,12 @@ const Dashboard = () => {
           </Link>
         </div>
 
-        <div className="card bg-white text-primary p-4 rounded-2xl shadow">
-          <DownlineTable
-            data={[
-              {
-                id: 1,
-                name: "Budi Santoso",
-                dateCreated: "2025-10-01",
-              },
-              {
-                id: 2,
-                name: "Siti Aisyah",
-                dateCreated: "2025-09-28",
-              },
-              {
-                id: 3,
-                name: "Andi Pratama",
-                dateCreated: "2025-09-30",
-              },
-              {
-                id: 4,
-                name: "Ahmad Bustomi",
-                dateCreated: "2025-10-01",
-              },
-              {
-                id: 5,
-                name: "Tardi Manalu",
-                dateCreated: "2025-10-02",
-              },
-              {
-                id: 6,
-                name: "David Corenswet",
-                dateCreated: "2025-10-03",
-              },
-              {
-                id: 7,
-                name: "Andrew Garfield",
-                dateCreated: "2025-10-04",
-              },
-            ]}
-          />
+        <div className="card bg-white text-primary px-2 pb-4 pt-1 rounded-2xl shadow">
+          <DownlineTable data={downlineData} compact />
         </div>
       </div>
+
+      <div className="mt-2 px-5"></div>
     </div>
   );
 };

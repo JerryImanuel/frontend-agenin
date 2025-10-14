@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -74,7 +75,12 @@ export default function Login() {
           <div className="text-center">
             <small>
               Belum memiliki akun? Silahkan{" "}
-              <span className="text-primary font-semibold">Daftar</span>.
+              <Link
+                to="/register"
+                className="text-primary font-semibold underline underline-offset-2"
+              >
+                Daftar
+              </Link>
             </small>
           </div>
         </div>
@@ -82,7 +88,7 @@ export default function Login() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-agenin text-white py-3 rounded-2xl font-normal hover:bg-primary/90 transition disabled:opacity-50"
+          className="w-full bg-sky-900 border-2 border-sky-900 text-sm text-white py-2 rounded-2xl font-normal hover:bg-primary/90 transition disabled:opacity-50"
         >
           {loading ? "Memproses..." : "Masuk"}
         </button>
