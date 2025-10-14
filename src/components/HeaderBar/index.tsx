@@ -25,7 +25,7 @@ export default function HeaderBar({
                   flex items-center px-5 pt-4 pb-3 justify-between ${className}`}
       role="banner"
     >
-      <h1 className="text-md font-semibold text-sky-900 truncate">{heading}</h1>
+      <h1 className="text-lg font-semibold text-sky-900 truncate">{heading}</h1>
 
       <div className="flex items-center gap-3">
         {rightSlot}

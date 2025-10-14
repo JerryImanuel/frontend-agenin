@@ -95,15 +95,15 @@ export default function Login() {
           )}
 
           <div className="text-center">
-            <small>
+            <span className="text-xs">
               Belum memiliki akun? Silahkan{" "}
               <Link
                 to="/register"
-                className="text-primary font-semibold underline underline-offset-2"
+                className="text-sky-700 font-semibold underline underline-offset-2"
               >
                 Daftar
               </Link>
-            </small>
+            </span>
           </div>
         </div>
 

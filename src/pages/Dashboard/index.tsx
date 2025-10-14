@@ -9,13 +9,13 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const downlineData = [
-    { id: 1, name: "Budi Santoso", dateCreated: "2025-10-01" },
-    { id: 2, name: "Siti Aisyah", dateCreated: "2025-09-28" },
-    { id: 3, name: "Andi Pratama", dateCreated: "2025-09-30" },
-    { id: 4, name: "Ahmad Bustomi", dateCreated: "2025-10-01" },
-    { id: 5, name: "Tardi Manalu", dateCreated: "2025-10-02" },
-    { id: 6, name: "David Corenswet", dateCreated: "2025-10-03" },
-    { id: 7, name: "Andrew Garfield", dateCreated: "2025-10-04" },
+    { id: 1, name: "Budi Santoso", jumlahKomisi: "Rp 100.000" },
+    { id: 2, name: "Siti Aisyah", jumlahKomisi: "Rp 100.000" },
+    { id: 3, name: "Andi Pratama", jumlahKomisi: "Rp 100.000" },
+    { id: 4, name: "Ahmad Bustomi", jumlahKomisi: "Rp 100.000" },
+    { id: 5, name: "Tardi Manalu", jumlahKomisi: "Rp 100.000" },
+    { id: 6, name: "David Corenswet", jumlahKomisi: "Rp 100.000" },
+    { id: 7, name: "Andrew Garfield", jumlahKomisi: "Rp 100.000" },
   ];
 
   return (
