@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -18,7 +19,10 @@ export default function Login() {
     setErr(null);
     setLoading(true);
     try {
-      await loginWithPassword({ userIdentifier:username, userPassword:password });
+      await loginWithPassword({
+        userIdentifier: username,
+        userPassword: password,
+      });
       navigate(location.state?.from || "/", { replace: true });
     } catch (e: any) {
       setErr(
@@ -53,18 +57,36 @@ export default function Login() {
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
             required
-            name='userIdentifier'
+            name="userIdentifier"
           />
           <label className="block text-xs font-medium mb-1">Kata Sandi</label>
-          <input
-            type="password"
-            className="w-full border text-sm border-gray-300 rounded-xl px-3 py-2 mb-1 focus:outline-none focus:ring-2 focus:ring-sky-900"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-            name="userPassword"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="w-full border text-sm border-gray-300 rounded-xl px-3 py-2 mb-1 focus:outline-none focus:ring-2 focus:ring-sky-900"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+              name="userPassword"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
+              aria-label={
+                showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"
+              }
+            >
+              <i
+                className={`bx ${
+                  showPassword
+                    ? "bx-show text-sky-900"
+                    : "bx-hide text-gray-400"
+                } text-lg`}
+              />
+            </button>
+          </div>
 
           {err && (
             <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg p-2 mt-3 mb-2">
