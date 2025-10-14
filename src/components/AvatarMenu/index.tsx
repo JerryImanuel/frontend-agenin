@@ -44,6 +44,11 @@ export default function AvatarMenu() {
     navigate("/login");
   };
 
+  const handleProfile = () => {
+    setOpen(false);
+    navigate("/profile");
+  };
+
   return (
     <div className="relative">
       <button
@@ -52,7 +57,7 @@ export default function AvatarMenu() {
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="w-9 h-9 rounded-full bg-blue-100 text-agenin flex items-center justify-center font-medium shadow focus:outline-none focus:ring-2 focus:ring-primary"
+        className="w-9 h-9 rounded-full bg-white text-sky-900 flex items-center justify-center font-medium shadow focus:outline-none focus:ring-2 focus:ring-primary"
         title={`${user?.firstName ?? "User"}`}
       >
         <span className="text-sm">{initials}</span>
@@ -62,11 +67,21 @@ export default function AvatarMenu() {
         <div
           ref={menuRef}
           role="menu"
-          className="absolute right-0 mt-2 w-40 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden z-50"
+          className="absolute right-0 mt-2 w-44 rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden z-50"
         >
           <button
             role="menuitem"
-            className="w-full text-left px-4 py-2 text-sm text-danger hover:bg-blue-100"
+            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            onClick={handleProfile}
+          >
+            Profil Saya
+          </button>
+
+          <div className="border-t border-gray-200 my-1" />
+
+          <button
+            role="menuitem"
+            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
             onClick={handleLogout}
           >
             Logout

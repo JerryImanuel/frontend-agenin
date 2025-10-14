@@ -66,7 +66,7 @@ export default function Dompet() {
         </div>
 
         <div className="flex items-center justify-center my-5">
-          <img src="/src/assets/image/topup.png" className="w-35" alt="Topup" />
+          <img src="/src/assets/image/topup.png" className="w-30" alt="Topup" />
         </div>
 
         <form onSubmit={onSubmit}>
@@ -81,7 +81,7 @@ export default function Dompet() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-agenin text-white text-sm py-2 rounded-xl font-normal hover:bg-primary/90 transition disabled:opacity-50"
+            className="w-full bg-sky-900 border-2 border-sky-900 text-white text-sm py-2 rounded-2xl font-normal hover:bg-primary/90 transition disabled:opacity-50"
           >
             {submitting ? "Memproses..." : "Transfer"}
           </button>

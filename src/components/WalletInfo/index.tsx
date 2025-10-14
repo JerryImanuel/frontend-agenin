@@ -11,7 +11,7 @@ export default function WalletInfo({
   error = null,
 }: WalletInfoProps) {
   return (
-    <div className="card bg-agenin text-white py-4 px-5 rounded-2xl shadow w-full transition">
+    <div className="card bg-sky-900 text-white py-4 px-5 rounded-2xl shadow w-full transition">
       {loading ? (
         <div className="flex items-center justify-center h-12">
           <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent" />
@@ -20,7 +20,7 @@ export default function WalletInfo({
         <p className="text-red-200 text-sm text-center">{error}</p>
       ) : (
         <>
-          <p className="mb-1 font-light text-xs">Saldo Saya</p>
+          <p className="mb-1 font-light text-xs">Total Saldo</p>
           <h1 className="font-semibold text-lg">
             {new Intl.NumberFormat("id-ID", {
               style: "currency",

@@ -13,7 +13,7 @@ export default function CommissionInfo({
 }: CommissionInfoProps) {
   return (
     <div className={`w-full ${className}`}>
-      <div className="card bg-sky-200 text-agenin py-4 px-5 rounded-2xl shadow w-full transition">
+      <div className="card bg-lime-600 text-white py-4 px-5 rounded-2xl shadow w-full transition">
         {loading ? (
           <div className="flex items-center justify-center h-12">
             <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent" />
