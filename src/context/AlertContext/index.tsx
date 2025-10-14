@@ -20,14 +20,12 @@ type Ctx = {
 const AlertContext = createContext<Ctx | null>(null);
 
 export function AlertProvider({ children }: { children: ReactNode }) {
-  // ⬅️ pakai ReactNode
   const [state, setState] = useState<AlertState>({
     open: false,
     message: "",
     variant: "info",
   });
 
-  // Lebih aman lintas-env
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const hideAlert = useCallback(() => {
