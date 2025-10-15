@@ -6,18 +6,17 @@ function readCookie(name: string): string | null {
 export function getToken(): string | null {
   return (
     localStorage.getItem("token") ||
-    sessionStorage.getItem("token") ||
     readCookie("token") || 
     null
   );
 }
 
 export function getUserIdFromAuth(): string | null {
-  const direct = localStorage.getItem("userId") || sessionStorage.getItem("userId");
+  const direct = localStorage.getItem("userId");
   if (direct) return direct;
 
   try {
-    const raw = localStorage.getItem("results") || sessionStorage.getItem("results");
+    const raw = localStorage.getItem("results");
     if (raw) {
       const obj = JSON.parse(raw);
       return obj?.userId || obj?.userEntityDTOId || obj?.id || null;

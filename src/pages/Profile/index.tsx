@@ -1,42 +1,31 @@
-// src/pages/Profile/index.tsx
-import { useEffect, useState } from "react";
-import { getProfileById, getMyProfile, type UserProfile } from "../../services/AuthAPI/getProfile";
-import { getUserIdFromAuth } from "../../utils/auth";
+import { useUserProfile } from "../../hooks/useUserProfile";
 
-export default function Profile() {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export default function ProfilePage() {
+  const { data, loading, error } = useUserProfile();
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const uid = getUserIdFromAuth();
-        const res = uid ? await getProfileById(uid) : await getMyProfile();
-        setProfile(res.results);
-      } catch (e: any) {
-        setError(e?.message || "Gagal memuat profil");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-
-  if (loading) return <div className="px-5 py-3">Memuat profil...</div>;
-  if (error) return <div className="px-5 py-3 text-red-500">{error}</div>;
-  if (!profile) return <div className="px-5 py-3">Profil tidak ditemukan.</div>;
+  if (loading) return <p>Loading profile…</p>;
+  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  if (!data) return <p>Profile kosong.</p>;
 
   return (
-    <div className="px-5 py-4">
-      <h1 className="text-lg font-semibold mb-4">Profil Saya</h1>
-      <div className="space-y-2">
-        <p><span className="font-medium">UserID:</span> {profile.userId}</p>
-        <p><span className="font-medium">Nama:</span> {profile.userFullName}</p>
-        <p><span className="font-medium">Email:</span> {profile.userEmail}</p>
-        <p><span className="font-medium">Nomor HP:</span> {profile.userPhoneNumber}</p>
-        <p><span className="font-medium">Role:</span> {profile.roleName}</p>
+    <div className="p-4">
+      <h1 className="text-xl font-semibold mb-3">Profile</h1>
+      <div className="space-y-1">
+        <div>
+          <b>ID:</b> {data.userId}
+        </div>
+        <div>
+          <b>Full Name:</b> {data.userFullName}
+        </div>
+        <div>
+          <b>Email:</b> {data.userEmail}
+        </div>
+        <div>
+          <b>Phone:</b> {data.userPhoneNumber}
+        </div>
+        <div>
+          <b>Role:</b> {data.roleName}
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
+import { useToken } from "../../context/AuthContext";
+import { login } from "../../services/AuthAPI";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -10,7 +11,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  const { loginWithPassword } = useAuth();
+  const { changeUser, user } = useToken();
   const navigate = useNavigate();
   const location = useLocation() as { state?: { from?: string } };
 
@@ -19,11 +20,18 @@ export default function Login() {
     setErr(null);
     setLoading(true);
     try {
-      await loginWithPassword({
+      const res = await login({
         userIdentifier: username,
         userPassword: password,
       });
-      navigate(location.state?.from || "/", { replace: true });
+      console.log(res);
+
+      changeUser({
+        ...user,
+        accessToken: res.results.token,
+        userId: res.results.userId,
+        userFullName: res.results.userFullName,
+      });
     } catch (e: any) {
       setErr(
         typeof e?.message === "string"

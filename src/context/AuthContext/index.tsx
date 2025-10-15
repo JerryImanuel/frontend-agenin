@@ -1,60 +1,94 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { login, type LoginPayload } from "../../services/AuthAPI";
-import type { User } from "../../types/User";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+import { setAxiosConfig } from "../../services/api";
 
-type AuthState = {
+export interface User {
+  accessToken: string;
+  userId?: string;
+  userFullName?: string;
+}
+
+interface Context {
   user: User | null;
-  accessToken: string | null;
-};
-
-type AuthContextValue = AuthState & {
-  loginWithPassword: (p: LoginPayload) => Promise<void>;
+  changeUser: (user: User | null) => void;
   logout: () => void;
+}
+
+interface Props {
+  children: ReactNode;
+}
+
+const contextValue: Context = {
+  user: {
+    accessToken: "",
+    userFullName: "",
+  },
+  changeUser: () => {},
+  logout: () => {},
 };
 
-const AuthContext = createContext<AuthContextValue | null>(null);
+const TokenContext = createContext<Context>(contextValue);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
+export const TokenProvider = ({ children }: Readonly<Props>) => {
+  const [user, setUser] = useState<User | null>(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser
+      ? (JSON.parse(storedUser) as User)
+      : {
+          accessToken: "",
+          userId: "",
+          userFullName: "",
+        };
+  });
 
-  // restore dari localStorage
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    const cachedUser = localStorage.getItem("user");
-    if (token) {
-      setAccessToken(token);
-    }
-    if (cachedUser) {
-      try {
-        setUser(JSON.parse(cachedUser));
-      } catch {}
+  const changeUser = useCallback((next: User | null) => {
+    setUser(next);
+    if (next) {
+      localStorage.setItem("user", JSON.stringify(next));
+      localStorage.setItem("token", next.accessToken);
+      localStorage.setItem("userId", next.userId || "");
+      window.location.href = "/";
+    } else {
+      localStorage.removeItem("user");
     }
   }, []);
 
-  const loginWithPassword = async (p: LoginPayload) => {
-    const res = await login(p);
-    setAccessToken(res.results.token);
-    localStorage.setItem("accessToken", res.results.token);
-  };
+  const logout = useCallback(() => {
+    if (user) {
+      localStorage.clear();
+      window.location.href = "/login";
+    }
+  }, [user]);
 
-  const logout = () => {
-    setUser(null);
-    setAccessToken(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
-  };
-
-  const value = useMemo(
-    () => ({ user, accessToken, loginWithPassword, logout }),
-    [user, accessToken]
+  const tokenContextValue = useMemo(
+    () => ({ user, changeUser, logout }),
+    [user, changeUser, logout]
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+  useEffect(() => {
+    if (user?.accessToken) {
+      setAxiosConfig(user.accessToken);
+    }
+  }, [user]);
 
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
-  return ctx;
-}
+  return (
+    <TokenContext.Provider value={tokenContextValue}>
+      {children}
+    </TokenContext.Provider>
+  );
+};
+
+export const useToken = () => {
+  const context = useContext(TokenContext);
+  if (context === undefined) {
+    throw new Error("Error, useToken must be use within TokenContext");
+  }
+  return context;
+};

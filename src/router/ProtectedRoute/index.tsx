@@ -1,11 +1,28 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { Outlet, useLocation } from "react-router";
+import { useToken } from "../../context/AuthContext";
 
-export default function ProtectedRoute() {
-  const { accessToken } = useAuth();
-  const loc = useLocation();
-  if (!accessToken) {
-    return <Navigate to="/login" replace state={{ from: loc.pathname }} />;
+const ProtectedRoutes = () => {
+  const { pathname } = useLocation();
+
+  const { user } = useToken();
+  console.log(user?.accessToken, "accs");
+
+  const tokenProtected = ["/", "/dompet", "/downline", "/produk", "/profile"];
+  const auth = ["/login", "/register"];
+
+  if (tokenProtected.includes(pathname)) {
+    if (!user?.accessToken) {
+      window.location.href = "/login";
+    }
   }
+
+  if (auth.includes(pathname)) {
+    if (user?.accessToken) {
+      window.location.href = "/";
+    }
+  }
+
   return <Outlet />;
-}
+};
+
+export default ProtectedRoutes;

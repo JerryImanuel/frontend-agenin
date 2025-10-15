@@ -1,5 +1,5 @@
 import AvatarMenu from "../AvatarMenu";
-import { useAuth } from "../../context/AuthContext";
+import { useToken } from "../../context/AuthContext";
 
 type HeaderBarProps = {
   title?: string;
@@ -14,10 +14,10 @@ export default function HeaderBar({
   rightSlot,
   className = "",
 }: HeaderBarProps) {
-  const { user } = useAuth();
+  const { user } = useToken();
 
   const heading =
-    title ?? (showGreeting ? `Halo, ${user?.firstName || "Pengguna"}` : "");
+    title ?? (showGreeting ? `Halo, ${user?.userFullName || "Pengguna"}` : "");
 
   return (
     <div
