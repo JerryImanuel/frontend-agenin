@@ -60,7 +60,7 @@ export default function AvatarMenu() {
         className="w-9 h-9 rounded-full bg-white text-sky-900 flex items-center justify-center font-medium shadow focus:outline-none focus:ring-2 focus:ring-primary"
         // title={`${user?.firstName ?? "User"}`}
       >
-        {/* <span className="text-sm">{initials}</span> */}
+        <i className="bx bxs-user text-lg"></i>
       </button>
 
       {open && (
