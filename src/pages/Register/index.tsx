@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../../services/AuthAPI/register";
 
 type Step1 = { fullName: string; email: string; phone: string };
 type Step2 = { referral: string };
@@ -26,9 +27,7 @@ export default function Register() {
     return e;
   }, [s1]);
 
-  const s2Error = useMemo(() => {
-    return {};
-  }, [s2]);
+  const s2Error = useMemo(() => ({}), [s2]);
 
   const s3Error = useMemo(() => {
     const e: Partial<Record<keyof Step3, string>> = {};
@@ -40,6 +39,8 @@ export default function Register() {
   }, [s3]);
 
   const [touched, setTouched] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const canNext1 = Object.keys(s1Error).length === 0;
   const canNext2 = Object.keys(s2Error).length === 0;
@@ -49,10 +50,10 @@ export default function Register() {
     setTouched(true);
     if (step === 1 && !canNext1) return;
     if (step === 2 && !canNext2) return;
-
     setTouched(false);
     setStep(step === 1 ? 2 : 3);
   };
+
   const handleBack = () => {
     if (step === 2) setStep(1);
     if (step === 3) setStep(2);
@@ -63,8 +64,23 @@ export default function Register() {
     setTouched(true);
     if (!canSubmit) return;
 
-    await new Promise((r) => setTimeout(r, 600));
-    navigate("/login", { replace: true });
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      await registerUser({
+        userFullName: s1.fullName.trim(),
+        userEmail: s1.email.trim(),
+        userPhoneNumber: s1.phone.trim(),
+        userPassword: s3.password,
+        userReferralCode: s2.referral?.trim() || null,
+      });
+      navigate("/login", { replace: true });
+    } catch (err) {
+      setSubmitError((err as Error).message || "Registrasi gagal");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -89,18 +105,15 @@ export default function Register() {
             />
           );
         })()}
-
         <ol className="relative z-10 flex items-center justify-between w-full">
           {[1, 2, 3].map((i) => {
             const isCurrent = step === i;
             const isCompleted = step > i;
-
             const circleClass = isCurrent
               ? "bg-slate-300 text-sky-900"
               : isCompleted
               ? "bg-sky-800 text-white"
               : "bg-gray-200 text-gray-500";
-
             return (
               <li key={i} className="flex items-center">
                 <div
@@ -141,6 +154,7 @@ export default function Register() {
                   </p>
                 )}
               </div>
+
               <div className="mb-3">
                 <label className="block text-xs font-medium mb-2">
                   Alamat Email
@@ -181,19 +195,17 @@ export default function Register() {
           )}
 
           {step === 2 && (
-            <>
-              <div className="mb-3">
-                <label className="block text-xs font-medium mb-2">
-                  Kode Referral
-                </label>
-                <input
-                  className="w-full border text-sm border-gray-300 rounded-xl px-3 py-2 mb-1 focus:outline-none focus:ring-2 focus:ring-sky-900"
-                  value={s2.referral}
-                  onChange={(e) => setS2({ referral: e.target.value })}
-                  placeholder="Masukkan kode referral (opsional)"
-                />
-              </div>
-            </>
+            <div className="mb-3">
+              <label className="block text-xs font-medium mb-2">
+                Kode Referral
+              </label>
+              <input
+                className="w-full border text-sm border-gray-300 rounded-xl px-3 py-2 mb-1 focus:outline-none focus:ring-2 focus:ring-sky-900"
+                value={s2.referral}
+                onChange={(e) => setS2({ referral: e.target.value })}
+                placeholder="Masukkan kode referral (opsional)"
+              />
+            </div>
           )}
 
           {step === 3 && (
@@ -240,6 +252,10 @@ export default function Register() {
           )}
         </div>
 
+        {submitError && (
+          <p className="text-red-500 text-xs text-center mb-2">{submitError}</p>
+        )}
+
         <div className="flex items-center gap-2">
           {step > 1 && (
             <button
@@ -258,24 +274,26 @@ export default function Register() {
               aria-disabled={
                 (step === 1 && !canNext1) || (step === 2 && !canNext2)
               }
-              className={`w-full bg-sky-900 border-2 border-sky-900 text-white text-sm py-2 rounded-2xl font-normal transition
-														${
-                              (step === 1 && !canNext1) ||
-                              (step === 2 && !canNext2)
-                                ? "opacity-50 cursor-not-allowed"
-                                : "hover:bg-sky-900"
-                            }`}
+              className={`w-full bg-sky-900 border-2 border-sky-900 text-white text-sm py-2 rounded-2xl font-normal transition ${
+                (step === 1 && !canNext1) || (step === 2 && !canNext2)
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-sky-900"
+              }`}
             >
               Lanjut
             </button>
           ) : (
             <button
               type="submit"
-              aria-disabled={!canSubmit}
-              className={`w-full bg-sky-900 border-2 border-sky-900 text-white text-sm py-2 rounded-2xl font-normal transition
-    										${!canSubmit ? "opacity-50 cursor-not-allowed" : "hover:bg-sky-900"}`}
+              disabled={!canSubmit || submitting}
+              aria-disabled={!canSubmit || submitting}
+              className={`w-full bg-sky-900 border-2 border-sky-900 text-white text-sm py-2 rounded-2xl font-normal transition ${
+                !canSubmit || submitting
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-sky-900"
+              }`}
             >
-              Daftar
+              {submitting ? "Memproses..." : "Daftar"}
             </button>
           )}
         </div>

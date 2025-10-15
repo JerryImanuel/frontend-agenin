@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useToken } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 function getInitials(name?: string) {
@@ -10,16 +10,16 @@ function getInitials(name?: string) {
 }
 
 export default function AvatarMenu() {
-  const { user, logout } = useAuth();
+  const { user, logout } = useToken();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  const initials = useMemo(
-    () => getInitials(`${user?.firstName ?? ""} ${user?.lastName ?? ""}`),
-    [user]
-  );
+  // const initials = useMemo(
+  //   () => getInitials(`${user?.firstName ?? ""} ${user?.lastName ?? ""}`),
+  //   [user]
+  // );
 
   useEffect(() => {
     const onDocClick = (e: MouseEvent) => {
@@ -58,9 +58,9 @@ export default function AvatarMenu() {
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
         className="w-9 h-9 rounded-full bg-white text-sky-900 flex items-center justify-center font-medium shadow focus:outline-none focus:ring-2 focus:ring-primary"
-        title={`${user?.firstName ?? "User"}`}
+        // title={`${user?.firstName ?? "User"}`}
       >
-        <span className="text-sm">{initials}</span>
+        {/* <span className="text-sm">{initials}</span> */}
       </button>
 
       {open && (

@@ -1,44 +1,44 @@
-import type { User } from "../../types/User";
-import { getToken } from "../../utils/auth";
+import type { UserProfileResponse } from "../../types/User/userprofile";
+import { getToken, getUserIdFromAuth } from "../../utils/auth";
 
-export type UserProfile = User & {
-  userId: string;
-  userFullName: string;
-  userEmail: string;
-  userPhoneNumber: string;
-  roleName: string;
-};
-export interface UserProfileResponse {
-  status: number;
-  message: string;
-  error: string | null;
-  results: UserProfile;
-}
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8989";
+const PROFILE_PATH = "/api/v1/user/profile";
 
-const BASE = "http://localhost:8989";
+export async function fetchUserProfile(): Promise<
+  UserProfileResponse["results"]
+> {
+  const token = getToken();
+  const userId = getUserIdFromAuth();
 
-function authHeaders() {
-  const t = getToken();
-  return {
-    "Content-Type": "application/json",
-    ...(t ? { Authorization: `Bearer ${t}` } : {}),
-  };
-}
+  if (!userId) {
+    throw new Error(
+      "User ID tidak ditemukan dari auth (localStorage/cookie/JWT)."
+    );
+  }
 
-export async function getProfileById(userId: string): Promise<UserProfileResponse> {
-  const res = await fetch(`${BASE}/api/v1/user/profile/${userId}`, {
+  const res = await fetch(`${BASE_URL}${PROFILE_PATH}`, {
     method: "GET",
-    headers: authHeaders(),
+    headers: {
+      "Content-Type": "application/json",
+      "X-User-ID": userId,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
-  return res.json();
-}
 
-export async function getMyProfile(): Promise<UserProfileResponse> {
-  const res = await fetch(`${BASE}/api/v1/user/profile/me`, {
-    method: "GET",
-    headers: authHeaders(),
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
-  return res.json();
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(
+      `Gagal fetch profile (${res.status}): ${text || res.statusText}`
+    );
+  }
+
+  const data = (await res.json()) as UserProfileResponse;
+
+  if (!data.results) {
+    throw new Error(
+      data.error || data.message || "Response tidak berisi data profile"
+    );
+  }
+
+  return data.results;
 }

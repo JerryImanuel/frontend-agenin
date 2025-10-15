@@ -1,6 +1,3 @@
-// src/services/authApi.ts
-import type { User } from "../../types/User";
-
 export type LoginPayload = {
   userIdentifier: string;
   userPassword: string;
@@ -10,9 +7,10 @@ export interface LoginResponse {
   status: number;
   message: string;
   error: string | null;
-  results: User & {
+  results: {
     token: string;
-    refreshToken?: string;
+    userId: string;
+    userFullName?: string;
   };
 }
 
