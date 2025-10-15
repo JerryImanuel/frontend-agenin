@@ -1,6 +1,8 @@
+// src/pages/Produk.tsx
 import { useMemo, useState } from "react";
 import { useAlert } from "../../context/AlertContext";
 import PageAlertTop from "../../components/PageAlertTop";
+import { useDownlineHistory } from "../../hooks/useDownlineHistory";
 
 type Product = {
   id: string;
@@ -9,44 +11,30 @@ type Product = {
   desc: string;
   price: number;
 };
+
 const PRODUCTS: Product[] = [
   {
-    id: "A",
+    id: "001",
     name: "Bank Central Asia",
     code: "PRD-A-001",
     desc: "Paling banyak di pakai di Asia",
     price: 100_000,
   },
   {
-    id: "B",
+    id: "002",
     name: "Bank Mandiri",
     code: "PRD-B-002",
     desc: "Bank nomor satu di Indonesia",
     price: 250_000,
   },
   {
-    id: "C",
+    id: "003",
     name: "Bank BTN",
     code: "PRD-C-003",
     desc: "Ideal untuk pengajuan KPR Rumah",
     price: 500_000,
   },
 ];
-
-type BankKey = "BANK" | "GOPAY" | "DANA";
-const BANKS: Record<BankKey, { label: string; adminFee: number }> = {
-  BANK: { label: "Transfer Bank", adminFee: 2500 },
-  GOPAY: { label: "Topup via Go-Pay", adminFee: 2000 },
-  DANA: { label: "Topup via DANA", adminFee: 1500 },
-};
-
-function currency(n: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(n);
-}
 
 function Stepper({ step }: { step: 1 | 2 | 3 }) {
   const progressPct = step === 1 ? 0 : step === 2 ? 50 : 100;
@@ -82,96 +70,121 @@ function Stepper({ step }: { step: 1 | 2 | 3 }) {
   );
 }
 
+function currency(n: number) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(n);
+}
+
 export default function Produk() {
-  const { showAlert } = useAlert(); // <-- pakai alert context
+  const { showAlert } = useAlert();
+  const { addItem } = useDownlineHistory();
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [selectedBank, setSelectedBank] = useState<BankKey | null>(null);
-  const [paying, setPaying] = useState(false);
-  const [paymentDone, setPaymentDone] = useState(false);
 
-  function guardResetPayment(cb: () => void) {
-    if (paymentDone) setPaymentDone(false);
-    cb();
-  }
-
-  const total = useMemo(() => {
-    if (!selectedProduct || !selectedBank) return 0;
-    return selectedProduct.price + BANKS[selectedBank].adminFee;
-  }, [selectedProduct, selectedBank]);
+  const [cid, setCid] = useState("");
+  const [cname, setCname] = useState("");
+  const [cphone, setCphone] = useState("");
+  const [cemail, setCemail] = useState("");
+  const [caddr, setCaddr] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const nextFromStep1 = () => {
     if (!selectedProduct) return;
     setStep(2);
   };
-  const nextFromStep2 = () => {
-    if (!selectedBank) return;
-    setStep(3);
-  };
   const backTo = (s: 1 | 2) => setStep(s);
 
-  const handlePay = async () => {
-    if (!selectedProduct || !selectedBank) return;
-    setPaying(true);
-    try {
-      // TODO: integrasikan ke API pembayaran
-      await new Promise((r) => setTimeout(r, 800));
-      setPaymentDone(true);
+  const submitRegistration = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedProduct) return;
 
-      showAlert(
-        `Pembayaran berhasil untuk ${selectedProduct.name} via ${
-          BANKS[selectedBank].label
-        }. Total ${currency(total)}.`,
-        "success"
-      );
-    } catch (e) {
-      //
-      showAlert("Pembayaran gagal. Coba lagi ya.", "error");
+    if (!cid || !cname || !cphone || !cemail || !caddr) {
+      showAlert("Lengkapi semua data nasabah terlebih dahulu.", "error");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await new Promise((r) => setTimeout(r, 800));
+
+      const res = {
+        productId: selectedProduct.id,
+        productName: `Open Bank Account - ${selectedProduct.name}`,
+        customerIndetityNumber: cid,
+        customerName: cname,
+        customerPhoneNumber: cphone,
+        customerEmail: cemail,
+        customerAddress: caddr,
+      };
+
+      addItem({
+        id: crypto.randomUUID(),
+        date: new Date().toISOString(),
+        productId: res.productId,
+        productName: res.productName,
+        customerIdentityNumber: res.customerIndetityNumber,
+        customerName: res.customerName,
+        customerPhoneNumber: res.customerPhoneNumber,
+        customerEmail: res.customerEmail,
+        customerAddress: res.customerAddress,
+        commissionAmount: 100_000,
+      });
+
+      showAlert("Pendaftaran nasabah berhasil.", "success");
+      setStep(3);
+    } catch {
+      showAlert("Pendaftaran gagal. Coba lagi ya.", "error");
     } finally {
-      setPaying(false);
+      setSubmitting(false);
     }
   };
 
-  const resetForNewPurchase = () => {
+  const resetFlow = () => {
     setSelectedProduct(null);
-    setSelectedBank(null);
+    setCid("");
+    setCname("");
+    setCphone("");
+    setCemail("");
+    setCaddr("");
     setStep(1);
-    setPaymentDone(false);
   };
 
   return (
     <div className="mt-2 px-5">
       <PageAlertTop />
 
-      <div className="flex flex-col items-start mb-5">
+      <div className="flex flex-col items-start mb-4">
         <p className="text-xs text-sky-950">
-          Berikut adalah layanan pembukaan akun bank yang disediakan oleh
-          Agenin.
+          Layanan pembukaan rekening bank oleh Agenin. Pilih produk, lalu isi
+          data nasabah.
         </p>
       </div>
 
-      {!paymentDone && <Stepper step={step} />}
+      {step !== 3 && <Stepper step={step} />}
 
       {step === 1 && (
         <div className="space-y-3">
-          <p className="mb-3 font-semibold">Pembukaan Akun Bank</p>
+          <p className="mb-3 font-semibold">Pilih Produk (Bank)</p>
           {PRODUCTS.map((p) => {
             const active = selectedProduct?.id === p.id;
             return (
               <button
                 key={p.id}
                 type="button"
-                onClick={() => guardResetPayment(() => setSelectedProduct(p))}
+                onClick={() => setSelectedProduct(p)}
                 className={[
-                  "w-full text-left rounded-2xl border px-4 py-3 transition-all",
+                  "w-full text-left rounded-2xl border-2 px-4 py-3 transition-all",
                   active
-                    ? "border-sky-800 bg-white shadow-md"
+                    ? "border-sky-800 bg-sky-100 shadow-md"
                     : "border-gray-200 bg-white hover:shadow-sm",
                 ].join(" ")}
               >
-                <div className="flex flex-col justify-between">
-                  <div className="flex flex-row justify-between">
+                <div>
+                  <div className="flex flex-row items-start justify-between">
                     <p className="text-sm font-semibold text-sky-900">
                       {p.name}
                     </p>
@@ -179,18 +192,13 @@ export default function Produk() {
                       {currency(p.price)}
                     </p>
                   </div>
-                  <div className="flex flex-row items-start justify-between mt-1">
-                    <div className="w-60">
-                      <p className="text-[10px] text-gray-500">{p.code}</p>
-                      <p className="text-xs text-gray-700">{p.desc}</p>
-                    </div>
-                    {active && (
-                      <span className="text-[10px] text-sky-700 mt-1">
-                        Dipilih
-                      </span>
-                    )}
+                </div>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] text-gray-500">{p.code}</p>
                   </div>
                 </div>
+                <p className="text-xs text-gray-700">{p.desc}</p>
               </button>
             );
           })}
@@ -204,29 +212,30 @@ export default function Produk() {
                   : "bg-gray-300 cursor-not-allowed"
               }`}
             >
-              Isi Saldo Pembukaan Rekening
+              Isi Data Nasabah
             </button>
           </div>
         </div>
       )}
 
-      {step === 2 && (
-        <div className="space-y-3">
+      {step === 2 && selectedProduct && (
+        <form onSubmit={submitRegistration} className="space-y-3">
           <div className="rounded-2xl bg-white border border-gray-200 px-4 py-4">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500">Pembukaan Akun Bank</p>
+                <p className="text-xs text-gray-500">Produk dipilih</p>
                 <p className="text-sm font-semibold text-sky-900">
-                  {selectedProduct?.name} ·{" "}
+                  {selectedProduct.name} ·{" "}
                   <span className="font-normal text-gray-600">
-                    {selectedProduct?.code}
+                    {selectedProduct.code}
                   </span>
                 </p>
                 <p className="text-xs text-gray-500">
-                  Minimum Saldo Rp {selectedProduct?.price}
+                  Minimum saldo awal {currency(selectedProduct.price)}
                 </p>
               </div>
               <button
+                type="button"
                 className="text-xs text-sky-800 underline"
                 onClick={() => backTo(1)}
               >
@@ -234,44 +243,83 @@ export default function Produk() {
               </button>
             </div>
           </div>
+          <div className="max-h-70 overflow-auto">
+            <div className="rounded-2xl bg-white border border-gray-200 px-4 py-4 space-y-3">
+              <p className="text-xs font-semibold text-sky-900">Data Nasabah</p>
 
-          <div className="py-3 px-4 bg-white rounded-2xl shadow">
-            <p className="mb-2 text-xs font-semibold">
-              Pilih metode pembayaran
-            </p>
-            {(Object.keys(BANKS) as BankKey[]).map((key) => {
-              const b = BANKS[key];
-              const active = selectedBank === key;
-              const estTotal = (selectedProduct?.price ?? 0) + b.adminFee;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => guardResetPayment(() => setSelectedBank(key))}
-                  className={[
-                    "w-full text-left border-2 rounded-xl px-4 py-2 mb-1 transition-all",
-                    active
-                      ? "border-sky-800 shadow-md bg-sky-100"
-                      : "border-gray-200 hover:shadow-sm",
-                  ].join(" ")}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-sky-900">
-                        {b.label}
-                      </p>
-                      <p className="text-xs text-gray-600">
-                        Biaya admin {currency(b.adminFee)} · Estimasi bayar{" "}
-                        {currency(estTotal)}
-                      </p>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
+              <div>
+                <label className="block text-xs text-gray-600 mb-1">
+                  NIK / No. Identitas
+                </label>
+                <input
+                  className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
+                  value={cid}
+                  onChange={(e) => setCid(e.target.value)}
+                  placeholder="3201xxxxxxxxxxxx"
+                  required
+                  inputMode="numeric"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs text-gray-600 mb-1">
+                  Nama Lengkap
+                </label>
+                <input
+                  className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
+                  value={cname}
+                  onChange={(e) => setCname(e.target.value)}
+                  placeholder="Nama sesuai KTP"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 gap-3">
+                <div>
+                  <label className="block text-xs text-gray-600 mb-1">
+                    No. Telepon
+                  </label>
+                  <input
+                    className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
+                    value={cphone}
+                    onChange={(e) => setCphone(e.target.value)}
+                    placeholder="08xxxxxxxxxx"
+                    required
+                    inputMode="tel"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-600 mb-1">
+                    Email
+                  </label>
+                  <input
+                    className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
+                    value={cemail}
+                    onChange={(e) => setCemail(e.target.value)}
+                    placeholder="nama@email.com"
+                    required
+                    type="email"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs text-gray-600 mb-1">
+                  Alamat
+                </label>
+                <textarea
+                  className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
+                  value={caddr}
+                  onChange={(e) => setCaddr(e.target.value)}
+                  placeholder="Nama jalan, nomor, kecamatan, kota/kab, provinsi"
+                  rows={3}
+                  required
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 pb-2">
             <button
               type="button"
               onClick={() => backTo(1)}
@@ -280,168 +328,65 @@ export default function Produk() {
               Kembali
             </button>
             <button
-              type="button"
-              onClick={nextFromStep2}
-              className={`w-full rounded-2xl py-2 text-white text-sm transition ${
-                selectedBank
-                  ? "bg-sky-900 hover:opacity-90"
-                  : "bg-gray-300 cursor-not-allowed"
-              }`}
+              type="submit"
+              disabled={submitting}
+              className="w-full rounded-2xl py-2 text-white text-sm transition bg-sky-900 hover:opacity-90 disabled:opacity-60"
             >
-              Lanjut
+              {submitting ? "Memproses..." : "Daftarkan"}
             </button>
           </div>
-        </div>
+        </form>
       )}
 
       {step === 3 && (
-        <>
-          {!paymentDone ? (
-            <div className="space-y-3">
-              <div className="rounded-2xl bg-white border border-gray-200 px-4 py-3">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-xs text-gray-500">Produk</p>
-                    <p className="text-sm font-semibold text-sky-900">
-                      {selectedProduct?.name} ·{" "}
-                      <span className="font-normal text-gray-600">
-                        {selectedProduct?.code}
-                      </span>
-                    </p>
-                    <p className="text-xs text-gray-600 mt-1">
-                      {selectedProduct?.desc}
-                    </p>
-                  </div>
-                  <button
-                    className="text-xs text-sky-800 underline"
-                    onClick={() => backTo(1)}
-                  >
-                    Ubah
-                  </button>
-                </div>
-              </div>
-
-              <div className="rounded-2xl bg-white border border-gray-200 px-4 py-3">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-xs text-gray-500">Metode Pembayaran</p>
-                    <p className="text-sm font-semibold text-sky-900">
-                      {selectedBank && BANKS[selectedBank].label}
-                    </p>
-                    <p className="text-[10px] text-gray-600 mt-1">
-                      Mengganti produk/bank setelah bayar akan membuat transaksi
-                      baru.
-                    </p>
-                  </div>
-                  <button
-                    className="text-xs text-sky-800 underline"
-                    onClick={() => backTo(2)}
-                  >
-                    Ubah
-                  </button>
-                </div>
-              </div>
-
-              <div className="rounded-2xl bg-white border border-gray-200 px-4 py-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-gray-700">Harga produk</span>
-                  <span className="font-medium text-sky-900">
-                    {selectedProduct ? currency(selectedProduct.price) : "-"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-xs mt-2">
-                  <span className="text-gray-700">Biaya admin</span>
-                  <span className="font-medium text-sky-900">
-                    {selectedBank
-                      ? currency(BANKS[selectedBank].adminFee)
-                      : "-"}
-                  </span>
-                </div>
-                <div className="border-t border-gray-200 my-2" />
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-semibold text-sky-900">
-                    Total bayar
-                  </span>
-                  <span className="font-bold text-sky-900">
-                    {currency(total)}
-                  </span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={handlePay}
-                disabled={paying}
-                className="w-full rounded-2xl py-2 text-white text-sm transition bg-sky-900 hover:opacity-90 disabled:opacity-60"
-              >
-                {paying ? "Memproses..." : "Bayar Sekarang"}
-              </button>
+        <div className="space-y-3">
+          <div className="rounded-2xl bg-green-50 border border-green-200 px-4 py-3 text-green-800 text-xs">
+            <div className="flex items-center gap-2">
+              <i className="bx bxs-check-circle text-lg" />
+              Pendaftaran nasabah berhasil dikirim.
             </div>
-          ) : (
-            <div className="space-y-3">
-              <div className="rounded-2xl bg-green-50 border border-green-200 px-4 py-3 text-green-800 text-xs">
-                <div className="flex items-center gap-2">
-                  <i className="bx bxs-check-circle text-lg" />
-                  Pembayaran berhasil. Terima kasih!
-                </div>
-              </div>
+          </div>
 
-              <div className="rounded-2xl bg-white border border-gray-200 px-4 py-3">
-                <p className="text-xs text-gray-500 mb-1">Produk</p>
-                <p className="text-sm font-semibold text-sky-900">
-                  {selectedProduct?.name} ·{" "}
-                  <span className="font-normal text-gray-600">
-                    {selectedProduct?.code}
-                  </span>
-                </p>
-                <p className="text-xs text-gray-600 mt-1">
-                  {selectedProduct?.desc}
-                </p>
-              </div>
+          <div className="rounded-2xl bg-white border border-gray-200 px-4 py-3">
+            <p className="text-xs text-gray-500 mb-1">Produk</p>
+            <p className="text-sm font-semibold text-sky-900">
+              Open Bank Account - {selectedProduct?.name} ·{" "}
+              <span className="font-normal text-gray-600">
+                {selectedProduct?.code}
+              </span>
+            </p>
+            <p className="text-xs text-gray-600 mt-1">
+              {selectedProduct?.desc}
+            </p>
+          </div>
 
-              <div className="rounded-2xl bg-white border border-gray-200 px-4 py-3">
-                <p className="text-xs text-gray-500 mb-1">Metode Pembayaran</p>
-                <p className="text-sm font-semibold text-sky-900">
-                  {selectedBank && BANKS[selectedBank].label}
-                </p>
-              </div>
+          <div className="rounded-2xl bg-white border border-gray-200 px-4 py-3 space-y-1">
+            <p className="text-xs text-gray-500 mb-1">Data Nasabah</p>
+            <p className="text-sm text-sky-900">
+              <b>Nama:</b> {cname}
+            </p>
+            <p className="text-sm text-sky-900">
+              <b>NIK:</b> {cid}
+            </p>
+            <p className="text-sm text-sky-900">
+              <b>Telepon:</b> {cphone}
+            </p>
+            <p className="text-sm text-sky-900">
+              <b>Email:</b> {cemail}
+            </p>
+            <p className="text-sm text-sky-900">
+              <b>Alamat:</b> {caddr}
+            </p>
+          </div>
 
-              <div className="rounded-2xl bg-white border border-gray-200 px-4 py-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-gray-700">Harga produk</span>
-                  <span className="font-medium text-sky-900">
-                    {selectedProduct ? currency(selectedProduct.price) : "-"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-xs mt-2">
-                  <span className="text-gray-700">Biaya admin</span>
-                  <span className="font-medium text-sky-900">
-                    {selectedBank
-                      ? currency(BANKS[selectedBank].adminFee)
-                      : "-"}
-                  </span>
-                </div>
-                <div className="border-t border-gray-200 my-2" />
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-semibold text-sky-900">
-                    Total bayar
-                  </span>
-                  <span className="font-bold text-sky-900">
-                    {currency(total)}
-                  </span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={resetForNewPurchase}
-                className="w-full border-2 border-sky-900 rounded-2xl py-2 text-sky-900 text-sm hover:bg-sky-900 hover:text-white"
-              >
-                Beli Produk Lain
-              </button>
-            </div>
-          )}
-        </>
+          <button
+            type="button"
+            onClick={resetFlow}
+            className="w-full border-2 border-sky-900 rounded-2xl py-2 text-sky-900 text-sm hover:bg-sky-900 hover:text-white"
+          >
+            Daftarkan Nasabah Lain
+          </button>
+        </div>
       )}
     </div>
   );
