@@ -16,21 +16,21 @@ const PRODUCTS: Product[] = [
     id: "001",
     name: "Bank Central Asia",
     code: "PRD-A-001",
-    desc: "Paling banyak di pakai di Asia",
+    desc: "Most widely used in Asia",
     price: 100_000,
   },
   {
     id: "002",
     name: "Bank Mandiri",
     code: "PRD-B-002",
-    desc: "Bank nomor satu di Indonesia",
+    desc: "The number one bank in Indonesia",
     price: 250_000,
   },
   {
     id: "003",
     name: "Bank BTN",
     code: "PRD-C-003",
-    desc: "Ideal untuk pengajuan KPR Rumah",
+    desc: "Ideal for applying for a home mortgage",
     price: 500_000,
   },
 ];
@@ -102,7 +102,7 @@ export default function Produk() {
     if (!selectedProduct) return;
 
     if (!cid || !cname || !cphone || !cemail || !caddr) {
-      showAlert("Lengkapi semua data nasabah terlebih dahulu.", "error");
+      showAlert("Complete all customer data first.", "error");
       return;
     }
 
@@ -133,10 +133,10 @@ export default function Produk() {
         commissionAmount: 100_000,
       });
 
-      showAlert("Pendaftaran nasabah berhasil.", "success");
+      showAlert("Customer registration successful.", "success");
       setStep(3);
     } catch {
-      showAlert("Pendaftaran gagal. Coba lagi ya.", "error");
+      showAlert("Registration failed. Please try again.", "error");
     } finally {
       setSubmitting(false);
     }
