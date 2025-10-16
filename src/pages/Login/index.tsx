@@ -36,7 +36,7 @@ export default function Login() {
       setErr(
         typeof e?.message === "string"
           ? e.message
-          : "Terjadi kesalahan. Silakan coba lagi."
+          : "An error has occurred. Please try again."
       );
     } finally {
       setLoading(false);
@@ -67,7 +67,7 @@ export default function Login() {
             required
             name="userIdentifier"
           />
-          <label className="block text-xs font-medium mb-1">Kata Sandi</label>
+          <label className="block text-xs font-medium mb-1">Password</label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -82,9 +82,7 @@ export default function Login() {
               type="button"
               onClick={() => setShowPassword((v) => !v)}
               className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
-              aria-label={
-                showPassword ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"
-              }
+              aria-label={showPassword ? "Hide Password" : "Show Password"}
             >
               <i
                 className={`bx ${
@@ -104,12 +102,12 @@ export default function Login() {
 
           <div className="text-center">
             <span className="text-xs">
-              Belum memiliki akun? Silahkan{" "}
+              Don't have an account yet? Please{" "}
               <Link
                 to="/register"
                 className="text-sky-700 font-semibold underline underline-offset-2"
               >
-                Daftar
+                Register
               </Link>
             </span>
           </div>
@@ -120,7 +118,7 @@ export default function Login() {
           disabled={loading}
           className="w-full bg-sky-900 border-2 border-sky-900 text-sm text-white py-2 rounded-2xl font-normal hover:bg-primary/90 transition disabled:opacity-50"
         >
-          {loading ? "Memproses..." : "Masuk"}
+          {loading ? "Processing..." : "Login"}
         </button>
       </form>
     </div>
