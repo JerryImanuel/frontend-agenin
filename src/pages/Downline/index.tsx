@@ -104,8 +104,8 @@ export default function Downline() {
       {!hasCode && (
         <div className="card bg-gray-50/30 border border-dashed px-4 py-3 rounded-2xl mb-3">
           <p className="text-xs text-sky-950 font-normal mb-2">
-            Generate kode untuk dibagikan kepada agen, tiap transaksi akan
-            menghasilkan pendapatan komisi.
+            Generate codes to share with agents; each transaction will generate
+            commission income.
           </p>
           <button
             onClick={handleGenerate}
@@ -114,7 +114,7 @@ export default function Downline() {
               refLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-sky-900"
             }`}
           >
-            {refLoading ? "Memproses..." : "Buat Kode Referral"}
+            {refLoading ? "Processing..." : "Generate Referral Code"}
           </button>
           {refErr && <p className="text-red-600 text-xs mt-2">{refErr}</p>}
         </div>
@@ -147,7 +147,7 @@ export default function Downline() {
                 title="Salin kode"
               >
                 {copied ? (
-                  <span className="font-medium text-xs">Kode disalin!</span>
+                  <span className="font-medium text-xs">Copied!</span>
                 ) : (
                   <i className="bx bx-copy text-2xl"></i>
                 )}
@@ -176,7 +176,7 @@ export default function Downline() {
                   />
                 </div>
                 <p className="px-3 py-3 text-sm text-gray-500">
-                  Downline belum tersedia.
+                  No downline data available.
                 </p>
               </div>
             </div>

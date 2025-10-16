@@ -14,11 +14,11 @@ export default function RootLayout() {
   if (location.pathname === "/") {
     showGreeting = true;
   } else if (location.pathname.startsWith("/dompet")) {
-    headerTitle = "Dompet";
+    headerTitle = "Wallet";
   } else if (location.pathname.startsWith("/downline")) {
     headerTitle = "Downline";
   } else if (location.pathname.startsWith("/produk")) {
-    headerTitle = "Produk";
+    headerTitle = "Product";
   } else if (location.pathname.startsWith("/profile")) {
     headerTitle = "Profile";
   }
@@ -57,7 +57,7 @@ export default function RootLayout() {
                   }
                 >
                   <i className="bx bxs-home text-xl" />
-                  <span className="text-xs">Beranda</span>
+                  <span className="text-xs">Home</span>
                 </NavLink>
 
                 <NavLink
@@ -71,7 +71,7 @@ export default function RootLayout() {
                   }
                 >
                   <i className="bx bxs-wallet text-xl" />
-                  <span className="text-xs">Dompet</span>
+                  <span className="text-xs">Wallet</span>
                 </NavLink>
 
                 <NavLink
@@ -99,7 +99,7 @@ export default function RootLayout() {
                   }
                 >
                   <i className="bx bxs-package text-xl" />
-                  <span className="text-xs">Produk</span>
+                  <span className="text-xs">Product</span>
                 </NavLink>
               </nav>
             </div>

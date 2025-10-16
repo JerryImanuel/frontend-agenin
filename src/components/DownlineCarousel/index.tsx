@@ -11,8 +11,8 @@ export default function DownlineCarousel({ data }: Props) {
 
   if (!displayData || displayData.length === 0) {
     return (
-      <div className="h-24 flex items-center justify-center text-sm text-gray-500">
-        Downline belum tersedia.
+      <div className="h-15 border border-dashed flex items-center justify-center text-sm text-gray-500 mt-2 rounded-2xl">
+        No downline available.
       </div>
     );
   }
@@ -39,7 +39,7 @@ export default function DownlineCarousel({ data }: Props) {
           >
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-[10px] text-gray-500">Nama Downline</p>
+                <p className="text-[10px] text-gray-500">Downline Name</p>
                 <p className="text-sm font-semibold text-sky-900 truncate">
                   {d.inviteeUserFullName}
                 </p>

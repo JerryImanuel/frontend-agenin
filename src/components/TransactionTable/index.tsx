@@ -57,7 +57,7 @@ const TransactionTable = ({ compact = false }: TransactionTableProps) => {
     >
       {dummyTransactions.length === 0 ? (
         <p className="px-3 py-3 text-sm text-gray-500 text-center italic">
-          Tidak ada transaksi.
+          No Transaction
         </p>
       ) : (
         dummyTransactions.map((t, idx) => (
@@ -72,7 +72,7 @@ const TransactionTable = ({ compact = false }: TransactionTableProps) => {
                 {t.productName}
               </p>
               <span className="text-xs font-semibold px-3 py-0.5 rounded-lg bg-emerald-100 text-emerald-700">
-                Berhasil
+                Success
               </span>
             </div>
 

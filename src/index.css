@@ -23,7 +23,7 @@ body {
 }
 
 .bg-background-gradient {
-  background: linear-gradient(to bottom, #c3dcf2 10%, #f5f8fe 30%);
+  background: linear-gradient(to bottom, #c3dcf2 0%, #ffffff 70%);
 }
 
 .bg-header {

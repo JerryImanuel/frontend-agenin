@@ -58,11 +58,13 @@ export default function Dompet() {
       />
 
       <div className="mt-4">
-        <p className="text-sm font-medium mb-3">Transfer Komisi</p>
+        <p className="text-sm font-medium mb-3">
+          Top Up Balance from Commission
+        </p>
 
         <div className="py-4 px-5 rounded-2xl bg-amber-50 text-xs text-amber-800 mb-4">
-          Transfer pendapatan dari komisi untuk menambahkan dan memperbarui
-          saldo dompet Agenin Anda.
+          Transfer income from commissions to add and update your Agenin wallet
+          balance.
         </div>
 
         <div className="flex items-center justify-center my-5">
@@ -72,7 +74,7 @@ export default function Dompet() {
         <form onSubmit={onSubmit}>
           <input
             className="w-full border text-xs border-gray-300 rounded-xl px-3 py-3 mb-3 focus:outline-none focus:ring-2 focus:ring-sky-900"
-            placeholder="Isi Jumlah Transfer (angka saja)"
+            placeholder="Fill Amount"
             value={amountStr}
             onChange={(e) => setAmountStr(e.target.value)}
             required
@@ -83,7 +85,7 @@ export default function Dompet() {
             disabled={submitting}
             className="w-full bg-sky-900 border-2 border-sky-900 text-white text-sm py-2 rounded-2xl font-normal hover:bg-primary/90 transition disabled:opacity-50"
           >
-            {submitting ? "Memproses..." : "Transfer"}
+            {submitting ? "Processing..." : "Top Up Balance"}
           </button>
         </form>
       </div>

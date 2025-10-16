@@ -74,7 +74,7 @@ export default function AvatarMenu() {
             className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             onClick={handleProfile}
           >
-            Profil Saya
+            My Profile
           </button>
 
           <div className="border-t border-gray-200 my-1" />

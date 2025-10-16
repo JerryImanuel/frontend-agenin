@@ -73,20 +73,21 @@ const DownlineTable = ({
           <div {...commonProps}>
             <div className="w-full flex items-center justify-between">
               <div>
-                <p className="text-[10px] text-gray-500">Nama Downline</p>
+                <p className="text-[10px] text-gray-500">Downline Name</p>
                 <p className="text-sm text-sky-900 font-medium">
                   {d.inviteeUserFullName}
                 </p>
               </div>
 
-              {/* Dashboard: hanya “Komisi Anda” singkat */}
               {isDashboard ? (
                 <span className="inline-block bg-emerald-600 text-white px-2 py-1 rounded-lg text-xs font-medium">
                   Rp {d.inviteeCommissionValue.toLocaleString("id-ID")}
                 </span>
               ) : (
                 <div className="text-right">
-                  <p className="text-[10px] text-gray-500">Komisi Downline</p>
+                  <p className="text-[10px] text-gray-500">
+                    Commission Downline
+                  </p>
                   <span>Rp 1.000.000</span>
                 </div>
               )}
@@ -95,7 +96,9 @@ const DownlineTable = ({
             {!isDashboard && (
               <div className="w-full py-1 mt-1 border-t border-slate-200">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-gray-500">Komisi Anda</span>
+                  <span className="text-[10px] text-gray-500">
+                    Your Commission
+                  </span>
                   <div className="font-semibold text-emerald-600 flex items-center gap-1">
                     <i className="bx bx-plus text-[15px]" />
                     <span className="text-sm">

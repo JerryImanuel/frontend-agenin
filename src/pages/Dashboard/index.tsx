@@ -48,12 +48,12 @@ const Dashboard = () => {
 
       <div className="mt-2 px-5">
         <div className="flex items-center justify-between">
-          <p className="font-medium text-sm">Komisi Downline</p>
+          <p className="font-medium text-sm">Downline Commission</p>
           <Link
             to="/downline"
             className="text-link flex items-center gap-2 text-sm"
           >
-            <span className="font-normal text-xs">Lihat Detail</span>
+            <span className="font-normal text-xs">See Details</span>
             <i className="bx bx-link-external" />
           </Link>
         </div>
@@ -61,9 +61,9 @@ const Dashboard = () => {
         <DownlineCarousel data={downlines} />
       </div>
 
-      <div className="mt-4 px-5">
-        <p className="font-medium text-sm mb-3">Log Transaksi</p>
-        <div className="card bg-white text-primary px-2 pb-4 pt-1 rounded-2xl shadow">
+      <div className="mt-3 px-5">
+        <p className="font-medium text-sm mb-3">Customer Info</p>
+        <div className="card bg-white text-primary p-3 rounded-2xl shadow-lg">
           <TransactionTable compact />
         </div>
       </div>

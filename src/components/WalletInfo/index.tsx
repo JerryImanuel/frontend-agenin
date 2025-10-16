@@ -20,7 +20,7 @@ export default function WalletInfo({
         <p className="text-red-200 text-sm text-center">{error}</p>
       ) : (
         <>
-          <p className="mb-1 font-light text-xs">Total Saldo</p>
+          <p className="mb-1 font-light text-xs">Balance Total</p>
           <h1 className="font-semibold text-lg">
             {new Intl.NumberFormat("id-ID", {
               style: "currency",

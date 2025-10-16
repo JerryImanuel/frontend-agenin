@@ -22,7 +22,7 @@ export default function CommissionInfo({
           <p className="text-red-200 text-sm text-center">{error}</p>
         ) : (
           <>
-            <p className="mb-1 font-light text-xs">Total Pendapatan Komisi</p>
+            <p className="mb-1 font-light text-xs">Commission Income</p>
             <h1 className="font-semibold text-lg">
               {new Intl.NumberFormat("id-ID", {
                 style: "currency",

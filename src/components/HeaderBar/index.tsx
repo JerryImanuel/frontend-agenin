@@ -17,7 +17,7 @@ export default function HeaderBar({
   const { user } = useToken();
 
   const heading =
-    title ?? (showGreeting ? `Halo, ${user?.userFullName || "Pengguna"}` : "");
+    title ?? (showGreeting ? `Hello, ${user?.userFullName || "User"}` : "");
 
   return (
     <div

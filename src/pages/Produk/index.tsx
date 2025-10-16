@@ -158,8 +158,8 @@ export default function Produk() {
 
       <div className="flex flex-col items-start mb-4">
         <p className="text-xs text-sky-950">
-          Layanan pembukaan rekening bank oleh Agenin. Pilih produk, lalu isi
-          data nasabah.
+          Bank account opening service by Agenin. Select a product, then fill in
+          the customer data.
         </p>
       </div>
 
@@ -167,7 +167,7 @@ export default function Produk() {
 
       {step === 1 && (
         <div className="space-y-3">
-          <p className="mb-3 font-semibold">Pilih Akun Bank</p>
+          <p className="mb-3 font-semibold">Select Bank Account</p>
           {PRODUCTS.map((p) => {
             const active = selectedProduct?.id === p.id;
             return (
@@ -176,7 +176,7 @@ export default function Produk() {
                 type="button"
                 onClick={() => setSelectedProduct(p)}
                 className={[
-                  "w-full text-left rounded-2xl border-2 px-4 py-3 transition-all",
+                  "w-full text-left rounded-2xl border-2 px-4 py-3 transition-all cursor-pointer",
                   active
                     ? "border-sky-800 bg-sky-100"
                     : "border-gray-200 bg-white",
@@ -211,7 +211,7 @@ export default function Produk() {
                   : "bg-gray-300 cursor-not-allowed"
               }`}
             >
-              Isi Data Nasabah
+              Fill Customer Data
             </button>
           </div>
         </div>
@@ -222,7 +222,7 @@ export default function Produk() {
           <div className="rounded-2xl bg-white border border-gray-200 px-4 py-4">
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-xs text-gray-500">Produk dipilih</p>
+                <p className="text-xs text-gray-500">Selected Bank Account</p>
                 <p className="text-sm font-semibold text-sky-900">
                   {selectedProduct.name} ·{" "}
                   <span className="font-normal text-gray-600">
@@ -230,7 +230,7 @@ export default function Produk() {
                   </span>
                 </p>
                 <p className="text-xs text-gray-500">
-                  Minimum saldo awal {currency(selectedProduct.price)}
+                  Minimum Deposit {currency(selectedProduct.price)}
                 </p>
               </div>
               <button
@@ -238,17 +238,19 @@ export default function Produk() {
                 className="text-xs text-sky-800 underline"
                 onClick={() => backTo(1)}
               >
-                Ubah
+                Change
               </button>
             </div>
           </div>
           <div className="max-h-70 overflow-auto">
             <div className="rounded-2xl bg-white border border-gray-200 px-4 py-4 space-y-3">
-              <p className="text-xs font-semibold text-sky-900">Data Nasabah</p>
+              <p className="text-xs font-semibold text-sky-900">
+                Customer Data
+              </p>
 
               <div>
                 <label className="block text-xs text-gray-600 mb-1">
-                  NIK / No. Identitas
+                  ID Number
                 </label>
                 <input
                   className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
@@ -262,13 +264,13 @@ export default function Produk() {
 
               <div>
                 <label className="block text-xs text-gray-600 mb-1">
-                  Nama Lengkap
+                  Full Name
                 </label>
                 <input
                   className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
                   value={cname}
                   onChange={(e) => setCname(e.target.value)}
-                  placeholder="Nama sesuai KTP"
+                  placeholder="Name according to your ID"
                   required
                 />
               </div>
@@ -276,7 +278,7 @@ export default function Produk() {
               <div className="grid grid-cols-1 gap-3">
                 <div>
                   <label className="block text-xs text-gray-600 mb-1">
-                    No. Telepon
+                    Phone Number
                   </label>
                   <input
                     className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
@@ -295,7 +297,7 @@ export default function Produk() {
                     className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
                     value={cemail}
                     onChange={(e) => setCemail(e.target.value)}
-                    placeholder="nama@email.com"
+                    placeholder="name@email.com"
                     required
                     type="email"
                   />
@@ -304,13 +306,13 @@ export default function Produk() {
 
               <div>
                 <label className="block text-xs text-gray-600 mb-1">
-                  Alamat
+                  Address
                 </label>
                 <textarea
                   className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-900"
                   value={caddr}
                   onChange={(e) => setCaddr(e.target.value)}
-                  placeholder="Nama jalan, nomor, kecamatan, kota/kab, provinsi"
+                  placeholder="Street name, etc."
                   rows={3}
                   required
                 />
@@ -324,14 +326,14 @@ export default function Produk() {
               onClick={() => backTo(1)}
               className="w-full border-2 border-sky-900 rounded-2xl py-2 text-sky-900 text-sm hover:bg-sky-900 hover:text-white"
             >
-              Kembali
+              Back
             </button>
             <button
               type="submit"
               disabled={submitting}
               className="w-full rounded-2xl py-2 text-white text-sm transition bg-sky-900 hover:opacity-90 disabled:opacity-60"
             >
-              {submitting ? "Memproses..." : "Daftarkan"}
+              {submitting ? "Processing..." : "Register"}
             </button>
           </div>
         </form>
@@ -342,12 +344,12 @@ export default function Produk() {
           <div className="rounded-2xl bg-green-50 border border-green-200 px-4 py-3 text-green-800 text-xs">
             <div className="flex items-center gap-2">
               <i className="bx bxs-check-circle text-lg" />
-              Pendaftaran nasabah berhasil dikirim.
+              Customer Transaction Success
             </div>
           </div>
 
           <div className="rounded-2xl bg-white border border-gray-200 px-4 py-3">
-            <p className="text-xs text-gray-500 mb-1">Produk</p>
+            <p className="text-xs text-gray-500 mb-1">Product</p>
             <p className="text-sm font-semibold text-sky-900">
               Open Bank Account - {selectedProduct?.name} ·{" "}
               <span className="font-normal text-gray-600">
@@ -360,22 +362,12 @@ export default function Produk() {
           </div>
 
           <div className="rounded-2xl bg-white border border-gray-200 px-4 py-3 space-y-1">
-            <p className="text-xs text-gray-500 mb-1">Data Nasabah</p>
-            <p className="text-sm text-sky-900">
-              <b>Nama:</b> {cname}
-            </p>
-            <p className="text-sm text-sky-900">
-              <b>NIK:</b> {cid}
-            </p>
-            <p className="text-sm text-sky-900">
-              <b>Telepon:</b> {cphone}
-            </p>
-            <p className="text-sm text-sky-900">
-              <b>Email:</b> {cemail}
-            </p>
-            <p className="text-sm text-sky-900">
-              <b>Alamat:</b> {caddr}
-            </p>
+            <p className="text-xs text-gray-500 mb-1">Customer Data</p>
+            <p className="text-sm text-sky-900">Name: {cname}</p>
+            <p className="text-sm text-sky-900">ID: {cid}</p>
+            <p className="text-sm text-sky-900">Phone: {cphone}</p>
+            <p className="text-sm text-sky-900">Email: {cemail}</p>
+            <p className="text-sm text-sky-900">Address: {caddr}</p>
           </div>
 
           <button
@@ -383,7 +375,7 @@ export default function Produk() {
             onClick={resetFlow}
             className="w-full border-2 border-sky-900 rounded-2xl py-2 text-sky-900 text-sm hover:bg-sky-900 hover:text-white"
           >
-            Daftarkan Nasabah Lain
+            Add Another Customer
           </button>
         </div>
       )}
