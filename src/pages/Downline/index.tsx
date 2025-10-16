@@ -60,14 +60,14 @@ export default function Downline() {
       const token = getToken() || undefined;
       const userId = getUserIdFromAuth();
       if (!userId)
-        throw new Error("User ID tidak ditemukan. Pastikan sudah login.");
+        throw new Error("User ID not found. Make sure you are logged in.");
 
       const res = await generateReferralCode(userId, token);
       setReferral(res);
       localStorage.setItem(LS_REFERRAL, JSON.stringify(res));
     } catch (e) {
-      const msg = (e as Error).message || "Gagal generate kode referral";
-      if (!msg.toLowerCase().includes("sudah memiliki")) {
+      const msg = (e as Error).message || "Failed to generate referral code";
+      if (!msg.toLowerCase().includes("Already Have")) {
         setRefErr(msg);
       } else {
         const saved = localStorage.getItem(LS_REFERRAL);
@@ -120,12 +120,13 @@ export default function Downline() {
         </div>
       )}
 
+      {/* Kartu kode referral: tampil HANYA jika sudah ada */}
       {hasCode && (
         <div className="card bg-white px-5 py-3 rounded-2xl mb-3 shadow relative">
           <div className="flex flex-row items-center justify-between">
             <div>
               <p className="text-xs text-slate-700 font-normal mb-1">
-                Kode Referral
+                Referral Code
               </p>
               <h1 className="font-bold text-slate-700 text-lg">
                 {referralCode}
@@ -157,8 +158,9 @@ export default function Downline() {
         </div>
       )}
 
-      <div className="card bg-white px-3 py-2 rounded-2xl shadow">
-        <div className="max-h-90 overflow-auto hide-overflow">
+      <div className="card bg-white p-3 rounded-2xl shadow">
+        <span className="mb-1 font-medium">List Downline</span>
+        <div>
           {dlLoading ? (
             <p className="px-3 pb-3 text-sm text-gray-500">
               Loading downlines...
@@ -166,19 +168,17 @@ export default function Downline() {
           ) : dlErr ? (
             <p className="px-3 pb-3 text-sm text-red-600">{dlErr}</p>
           ) : tableData.length === 0 ? (
-            <div className="h-90 w-full flex items-center justify-center">
-              <div>
-                <div className="flex items-center justify-center">
-                  <img
-                    src="/src/assets/image/empty.png"
-                    className="w-27"
-                    alt="Empty"
-                  />
-                </div>
-                <p className="px-3 py-3 text-sm text-gray-500">
-                  No downline data available.
-                </p>
+            <div className="h-90 w-full flex flex-col items-center justify-center">
+              <div className="flex items-center justify-center">
+                <img
+                  src="/src/assets/image/empty.png"
+                  className="w-27"
+                  alt="Empty"
+                />
               </div>
+              <p className="px-3 py-3 text-sm text-gray-500">
+                No Downline Available
+              </p>
             </div>
           ) : (
             <DownlineTable data={tableData} />
