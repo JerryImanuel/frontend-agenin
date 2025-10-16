@@ -60,7 +60,7 @@ export default function Login() {
         <div className="px-2">
           <label className="block text-xs font-medium mb-1">Username</label>
           <input
-            className="w-full border text-sm border-gray-300 rounded-xl px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-sky-900"
+            className="w-full border text-sm bg-white border-gray-300 rounded-xl px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-sky-900"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username"
@@ -71,7 +71,7 @@ export default function Login() {
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
-              className="w-full border text-sm border-gray-300 rounded-xl px-3 py-2 mb-1 focus:outline-none focus:ring-2 focus:ring-sky-900"
+              className="w-full border text-sm bg-white border-gray-300 rounded-xl px-3 py-2 mb-1 focus:outline-none focus:ring-2 focus:ring-sky-900"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
