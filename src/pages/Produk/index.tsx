@@ -1,4 +1,3 @@
-// src/pages/Produk.tsx
 import { useMemo, useState } from "react";
 import { useAlert } from "../../context/AlertContext";
 import PageAlertTop from "../../components/PageAlertTop";
@@ -113,7 +112,7 @@ export default function Produk() {
 
       const res = {
         productId: selectedProduct.id,
-        productName: `Open Bank Account - ${selectedProduct.name}`,
+        productName: `Buka Akun Bank - ${selectedProduct.name}`,
         customerIndetityNumber: cid,
         customerName: cname,
         customerPhoneNumber: cphone,

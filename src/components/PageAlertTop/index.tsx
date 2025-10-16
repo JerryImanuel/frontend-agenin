@@ -1,4 +1,3 @@
-// src/components/PageAlertTop/index.tsx
 import { useEffect, useState } from "react";
 import { useAlert } from "../../context/AlertContext";
 

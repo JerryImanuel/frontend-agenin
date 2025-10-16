@@ -157,7 +157,7 @@ export default function Downline() {
         </div>
       )}
 
-      <div className="card bg-white text-sky-900 px-2 pb-4 pt-1 rounded-2xl shadow">
+      <div className="card bg-white px-3 py-2 rounded-2xl shadow">
         <div className="max-h-90 overflow-auto hide-overflow">
           {dlLoading ? (
             <p className="px-3 pb-3 text-sm text-gray-500">
@@ -167,16 +167,18 @@ export default function Downline() {
             <p className="px-3 pb-3 text-sm text-red-600">{dlErr}</p>
           ) : tableData.length === 0 ? (
             <div className="h-90 w-full flex items-center justify-center">
-              <div className="flex items-center justify-center">
-                <img
-                  src="/src/assets/image/empty.png"
-                  className="w-27"
-                  alt="Empty"
-                />
+              <div>
+                <div className="flex items-center justify-center">
+                  <img
+                    src="/src/assets/image/empty.png"
+                    className="w-27"
+                    alt="Empty"
+                  />
+                </div>
+                <p className="px-3 py-3 text-sm text-gray-500">
+                  Downline belum tersedia.
+                </p>
               </div>
-              <p className="px-3 py-3 text-sm text-gray-500">
-                Downline belum tersedia.
-              </p>
             </div>
           ) : (
             <DownlineTable data={tableData} />

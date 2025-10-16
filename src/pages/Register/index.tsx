@@ -110,10 +110,10 @@ export default function Register() {
             const isCurrent = step === i;
             const isCompleted = step > i;
             const circleClass = isCurrent
-              ? "bg-slate-300 text-sky-900"
+              ? "bg-lime-600 text-white"
               : isCompleted
               ? "bg-sky-800 text-white"
-              : "bg-gray-200 text-gray-500";
+              : "bg-white text-gray-500";
             return (
               <li key={i} className="flex items-center">
                 <div

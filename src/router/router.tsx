@@ -6,6 +6,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "../pages/Dashboard";
 import Dompet from "../pages/Dompet";
 import Downline from "../pages/Downline";
+import DownlineDetail from "../pages/DownlineDetail";
 import Produk from "../pages/Produk";
 import Profile from "../pages/Profile";
 
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
           { index: true, element: <Dashboard /> },
           { path: "dompet", element: <Dompet /> },
           { path: "downline", element: <Downline /> },
+          { path: "/downline/:inviteeUserId", element: <DownlineDetail /> },
           { path: "produk", element: <Produk /> },
           { path: "profile", element: <Profile /> },
         ],
