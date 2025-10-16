@@ -168,7 +168,7 @@ export default function Produk() {
 
       {step === 1 && (
         <div className="space-y-3">
-          <p className="mb-3 font-semibold">Pilih Produk (Bank)</p>
+          <p className="mb-3 font-semibold">Pilih Akun Bank</p>
           {PRODUCTS.map((p) => {
             const active = selectedProduct?.id === p.id;
             return (
@@ -179,8 +179,8 @@ export default function Produk() {
                 className={[
                   "w-full text-left rounded-2xl border-2 px-4 py-3 transition-all",
                   active
-                    ? "border-sky-800 bg-sky-100 shadow-md"
-                    : "border-gray-200 bg-white hover:shadow-sm",
+                    ? "border-sky-800 bg-sky-100"
+                    : "border-gray-200 bg-white",
                 ].join(" ")}
               >
                 <div>

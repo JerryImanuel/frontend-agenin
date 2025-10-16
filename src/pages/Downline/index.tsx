@@ -1,68 +1,188 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DownlineTable from "../../components/DownlineTable";
+import {
+  generateReferralCode,
+  type ReferralCode,
+} from "../../services/AuthAPI/generateReferralCode";
+import { getToken, getUserIdFromAuth } from "../../utils/auth";
+import {
+  getUserDownline,
+  type DownlineUser,
+} from "../../services/AuthAPI/getUserDownline";
 
-const downlineData = [
-  { id: 1, name: "Budi Santoso", jumlahKomisi: "Rp 100.000" },
-  { id: 2, name: "Siti Aisyah", jumlahKomisi: "Rp 100.000" },
-  { id: 3, name: "Andi Pratama", jumlahKomisi: "Rp 100.000" },
-  { id: 4, name: "Ahmad Bustomi", jumlahKomisi: "Rp 100.000" },
-  { id: 5, name: "Tardi Manalu", jumlahKomisi: "Rp 100.000" },
-  { id: 6, name: "David Corenswet", jumlahKomisi: "Rp 100.000" },
-  { id: 7, name: "Andrew Garfield", jumlahKomisi: "Rp 100.000" },
-];
+const LS_REFERRAL = "referralCode";
 
-const Downline = () => {
-  const referralCode = "A7DHSNE63TG";
+export default function Downline() {
+  const [referral, setReferral] = useState<ReferralCode | null>(null);
+  const [refLoading, setRefLoading] = useState(false);
+  const [refErr, setRefErr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async () => {
+  const [downlines, setDownlines] = useState<DownlineUser[]>([]);
+  const [dlLoading, setDlLoading] = useState(true);
+  const [dlErr, setDlErr] = useState<string | null>(null);
+
+  const referralCode = referral?.userReferralCode ?? "";
+  const hasCode = Boolean(referralCode);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(LS_REFERRAL);
+    if (saved) {
+      try {
+        setReferral(JSON.parse(saved) as ReferralCode);
+      } catch {}
+    }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      setDlLoading(true);
+      setDlErr(null);
+      try {
+        const token = getToken() || undefined;
+        const userId = getUserIdFromAuth();
+        if (!userId) throw new Error("User not logged in.");
+        const data = await getUserDownline(userId, token);
+        setDownlines(data || []);
+      } catch (e) {
+        setDlErr((e as Error).message);
+      } finally {
+        setDlLoading(false);
+      }
+    })();
+  }, []);
+
+  const handleGenerate = async () => {
+    if (hasCode) return;
+    setRefLoading(true);
+    setRefErr(null);
     try {
-      await navigator.clipboard.writeText(referralCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 3000);
-    } catch (err) {
-      console.error("Gagal menyalin kode:", err);
+      const token = getToken() || undefined;
+      const userId = getUserIdFromAuth();
+      if (!userId)
+        throw new Error("User ID tidak ditemukan. Pastikan sudah login.");
+
+      const res = await generateReferralCode(userId, token);
+      setReferral(res);
+      localStorage.setItem(LS_REFERRAL, JSON.stringify(res));
+    } catch (e) {
+      const msg = (e as Error).message || "Gagal generate kode referral";
+      if (!msg.toLowerCase().includes("sudah memiliki")) {
+        setRefErr(msg);
+      } else {
+        const saved = localStorage.getItem(LS_REFERRAL);
+        if (saved) {
+          try {
+            setReferral(JSON.parse(saved) as ReferralCode);
+          } catch {}
+        }
+      }
+    } finally {
+      setRefLoading(false);
     }
   };
 
+  const handleCopy = async () => {
+    if (!referralCode) return;
+    await navigator.clipboard.writeText(referralCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 3000);
+  };
+
+  const tableData = useMemo(
+    () =>
+      (downlines || []).map((d) => ({
+        inviteeUserId: d.inviteeUserId,
+        inviteeUserFullName: d.inviteeUserFullName,
+        inviteeCommissionValue: Number(d.inviteeCommissionValue || 0),
+      })),
+    [downlines]
+  );
+
   return (
     <div className="mt-2 px-5">
-      <div className="card bg-gray-50/30 border border-dashed px-4 py-3 rounded-2xl mb-3">
-        <p className="text-xs text-sky-950 font-normal mb-2">
-          Generate kode untuk dibagikan kepada agen, tiap transaksi akan
-          menghasilkan pendapatan komisi
-        </p>
-        <button className="bg-sky-950 text-white px-4 py-2 font-normal rounded-xl">
-          Buat Kode Referral
-        </button>
-      </div>
-      <div className="card bg-white px-5 py-3 rounded-2xl mb-3 shadow relative">
-        <div className="flex flex-row items-center justify-between">
-          <div>
-            <p className="text-xs text-slate-700 font-normal mb-1">
-              Kode Referall
-            </p>
-            <h1 className="font-bold text-slate-700 text-lg">{referralCode}</h1>
-          </div>
-          <div>
-            <button
-              onClick={handleCopy}
-              className="text-sky-900 font-medium hover:text-sky-700 transition"
-            >
-              {copied ? (
-                <span className="font-medium">Kode disalin!</span>
-              ) : (
-                <i className="bx bx-copy text-2xl"></i>
+      {!hasCode && (
+        <div className="card bg-gray-50/30 border border-dashed px-4 py-3 rounded-2xl mb-3">
+          <p className="text-xs text-sky-950 font-normal mb-2">
+            Generate kode untuk dibagikan kepada agen, tiap transaksi akan
+            menghasilkan pendapatan komisi.
+          </p>
+          <button
+            onClick={handleGenerate}
+            disabled={refLoading}
+            className={`bg-sky-950 text-white px-4 py-2 font-normal rounded-xl transition ${
+              refLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-sky-900"
+            }`}
+          >
+            {refLoading ? "Memproses..." : "Buat Kode Referral"}
+          </button>
+          {refErr && <p className="text-red-600 text-xs mt-2">{refErr}</p>}
+        </div>
+      )}
+
+      {hasCode && (
+        <div className="card bg-white px-5 py-3 rounded-2xl mb-3 shadow relative">
+          <div className="flex flex-row items-center justify-between">
+            <div>
+              <p className="text-xs text-slate-700 font-normal mb-1">
+                Kode Referral
+              </p>
+              <h1 className="font-bold text-slate-700 text-lg">
+                {referralCode}
+              </h1>
+              {referral?.userReferralCreatedAt && (
+                <p className="text-[11px] text-gray-500 mt-1">
+                  Dibuat:{" "}
+                  {new Date(referral.userReferralCreatedAt).toLocaleString(
+                    "id-ID",
+                    { dateStyle: "medium", timeStyle: "short" }
+                  )}
+                </p>
               )}
-            </button>
+            </div>
+            <div>
+              <button
+                onClick={handleCopy}
+                className="text-sky-900 font-medium hover:text-sky-700 transition"
+                title="Salin kode"
+              >
+                {copied ? (
+                  <span className="font-medium text-xs">Kode disalin!</span>
+                ) : (
+                  <i className="bx bx-copy text-2xl"></i>
+                )}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
       <div className="card bg-white text-sky-900 px-2 pb-4 pt-1 rounded-2xl shadow">
-        <DownlineTable data={downlineData} />
+        <div className="max-h-90 overflow-auto hide-overflow">
+          {dlLoading ? (
+            <p className="px-3 pb-3 text-sm text-gray-500">
+              Loading downlines...
+            </p>
+          ) : dlErr ? (
+            <p className="px-3 pb-3 text-sm text-red-600">{dlErr}</p>
+          ) : tableData.length === 0 ? (
+            <div className="h-90 w-full flex items-center justify-center">
+              <div className="flex items-center justify-center">
+                <img
+                  src="/src/assets/image/empty.png"
+                  className="w-27"
+                  alt="Empty"
+                />
+              </div>
+              <p className="px-3 py-3 text-sm text-gray-500">
+                Downline belum tersedia.
+              </p>
+            </div>
+          ) : (
+            <DownlineTable data={tableData} />
+          )}
+        </div>
       </div>
     </div>
   );
-};
-
-export default Downline;
+}

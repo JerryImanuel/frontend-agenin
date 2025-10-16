@@ -13,9 +13,8 @@ export function useCommission() {
     (async () => {
       try {
         setLoading(true);
-        // TODO: ganti ke API real: GET /commission
         await new Promise((r) => setTimeout(r, 250));
-        setCommission(570_000); // mock awal
+        setCommission(570_000);
       } catch (e) {
         setError("Gagal memuat komisi.");
       } finally {
