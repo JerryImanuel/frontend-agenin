@@ -12,9 +12,6 @@ export default function DownlineDetail() {
   const location = useLocation() as { state?: { item?: Downline } };
   const item = location.state?.item;
 
-  // TODO: jika ingin support direct-load tanpa state:
-  // const { data, loading } = useDownlineItem(inviteeUserId) // fetch by id
-
   if (!item) {
     return (
       <div className="px-5">
@@ -34,10 +31,10 @@ export default function DownlineDetail() {
   }
 
   return (
-    <div className="px-5 py-3">
+    <div className="px-5">
       <button
         onClick={() => navigate(-1)}
-        className="mb-3 inline-flex items-center gap-1 text-sm text-sky-900 hover:underline"
+        className="mb-3 inline-flex items-center gap-1 text-sm text-sky-900"
       >
         <i className="bx bx-left-arrow-alt text-lg" /> Kembali
       </button>
@@ -48,19 +45,21 @@ export default function DownlineDetail() {
         </h2>
         <p className="text-xs text-gray-500 mt-1">ID: {item.inviteeUserId}</p>
 
+        <div className="border border-1 mt-3 border border-dashed border-gray-300"></div>
+
         <div className="mt-3 space-y-2 text-sm">
           <div className="flex items-start justify-between gap-2">
-            <span className="text-gray-500">Nama</span>
+            <span className="text-gray-500 text-xs">Nama</span>
             <span className="font-medium text-sky-900">
               {item.inviteeUserFullName}
             </span>
           </div>
           <div className="flex items-start justify-between gap-2">
-            <span className="text-gray-500">Komisi Downline</span>
+            <span className="text-gray-500 text-xs">Komisi Downline</span>
             <span>Rp 1.000.000</span>
           </div>
           <div className="flex items-start justify-between gap-2">
-            <span className="text-gray-500">Komisi Anda</span>
+            <span className="text-gray-500 text-xs">Komisi Anda</span>
             <span className="font-semibold text-emerald-600">
               Rp {item.inviteeCommissionValue.toLocaleString("id-ID")}
             </span>

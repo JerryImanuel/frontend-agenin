@@ -32,13 +32,27 @@ const dummyTransactions: Transaction[] = [
     amount: 500000,
     status: "success",
   },
+  {
+    id: "TX-004",
+    productName: "Buka Akun Bank BTN",
+    date: "2025-10-07",
+    amount: 500000,
+    status: "success",
+  },
+  {
+    id: "TX-005",
+    productName: "Buka Akun Bank BTN",
+    date: "2025-10-07",
+    amount: 500000,
+    status: "success",
+  },
 ];
 
 const TransactionTable = ({ compact = false }: TransactionTableProps) => {
   return (
     <div
       className={`w-full overflow-auto hide-scrollbar ${
-        compact ? "max-h-100" : ""
+        compact ? "max-h-65" : ""
       }`}
     >
       {dummyTransactions.length === 0 ? (

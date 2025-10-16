@@ -1,4 +1,3 @@
-// src/components/DownlineCarousel.tsx
 type Downline = {
   inviteeUserId: string;
   inviteeUserFullName: string;
@@ -28,7 +27,6 @@ export default function DownlineCarousel({ data }: Props) {
           hide-scrollbar
           touch-pan-x overscroll-x-contain
         "
-        // momentum scroll utk iOS Safari
         style={{ WebkitOverflowScrolling: "touch" as any }}
       >
         {data.map((d) => (
