@@ -48,7 +48,7 @@ export default function Login() {
       <div className="flex flex-col items-center justify-center mb-10 mt-30">
         <img
           src="/src/assets/image/logo-agenin.png"
-          className="w-20 h-20"
+          className="h-13"
           alt="Agenin"
         />
       </div>

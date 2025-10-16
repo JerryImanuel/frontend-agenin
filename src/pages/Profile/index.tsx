@@ -57,7 +57,7 @@ export default function ProfilePage() {
           <div className="flex items-start gap-2">
             <i className="bx bxs-error-circle text-xl" />
             <div>
-              <p className="font-medium">Gagal memuat profil</p>
+              <p className="font-medium">Failed to load profile</p>
               <p className="text-sm">{error}</p>
             </div>
           </div>
@@ -65,7 +65,7 @@ export default function ProfilePage() {
             className="mt-3 rounded-xl border border-red-300 px-3 py-2 text-sm hover:bg-red-100"
             onClick={() => window.location.reload()}
           >
-            Muat Ulang
+            Reload
           </button>
         </div>
       </div>
@@ -76,7 +76,7 @@ export default function ProfilePage() {
     return (
       <div className="p-5">
         <div className="rounded-2xl border border-gray-200 bg-white p-4 text-gray-600">
-          Profil kosong.
+          Empty Profile
         </div>
       </div>
     );
@@ -105,7 +105,7 @@ export default function ProfilePage() {
       <div className="rounded-2xl border border-gray-200 bg-white py-4 px-5 shadow-sm">
         <div className="space-y-3 text-sm">
           <div className="flex flex-col justify-between gap-1 mb-3">
-            <div className="text-gray-500 text-xs">Nama Lengkap</div>
+            <div className="text-gray-500 text-xs">Full Name</div>
             <div className="text-sky-950 font-medium">{data.userFullName}</div>
           </div>
 
@@ -117,7 +117,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex flex-col justify-between gap-1 mb-3">
-            <div className="text-gray-500 text-xs">Telepon</div>
+            <div className="text-gray-500 text-xs">Phone Number</div>
             <div className="flex items-center gap-2">
               <span className="text-sky-950">
                 {data.userPhoneNumber || "-"}
@@ -126,7 +126,7 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex flex-col justify-between gap-1">
-            <div className="text-gray-500 text-xs">Peran</div>
+            <div className="text-gray-500 text-xs">Role</div>
             <div className="text-sky-950">{data.roleName || "-"}</div>
           </div>
         </div>

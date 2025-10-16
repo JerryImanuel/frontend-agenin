@@ -89,7 +89,7 @@ export default function Register() {
       <div className="flex flex-col items-center justify-center mb-8 mt-8">
         <img
           src="/src/assets/image/logo-agenin.png"
-          className="w-16 h-16"
+          className="h-13"
           alt="Agenin"
         />
         <p className="mt-2 font-semibold">Create an Account</p>
