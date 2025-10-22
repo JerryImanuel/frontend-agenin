@@ -1,8 +1,25 @@
-import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useLocation, Navigate } from "react-router-dom";
 import HeaderBar from "../../components/HeaderBar";
+import { useToken } from "../../context/AuthContext";
+
+const NAV_BY_ROLE = {
+  ADMIN: [
+    // { to: "/downline", icon: "bx bx-git-branch", label: "Downline" },
+    { to: "/produk", icon: "bx bxs-package", label: "Product" },
+  ],
+  AGENT: [
+    { to: "/", icon: "bx bxs-home", label: "Home" },
+    { to: "/dompet", icon: "bx bxs-wallet", label: "Wallet" },
+    { to: "/downline", icon: "bx bx-git-branch", label: "Downline" },
+    { to: "/produk", icon: "bx bxs-package", label: "Product" },
+  ],
+} as const;
 
 export default function RootLayout() {
   const location = useLocation();
+  const { user } = useToken();
+  const role = (user?.roleName ?? "AGENT") as "ADMIN" | "AGENT";
+  const navItems = NAV_BY_ROLE[role] ?? NAV_BY_ROLE.AGENT;
 
   const isAuthRoute =
     location.pathname === "/login" ||
@@ -21,6 +38,10 @@ export default function RootLayout() {
     headerTitle = "Product";
   } else if (location.pathname.startsWith("/profile")) {
     headerTitle = "Profile";
+  }
+
+  if (!isAuthRoute && location.pathname === "/" && role === "ADMIN") {
+    return <Navigate to="/downline" replace />;
   }
 
   return (
@@ -44,63 +65,24 @@ export default function RootLayout() {
               className="flex-none bg-white border-t border-gray-200 p-2 z-50"
               role="navigation"
             >
-              <nav className="flex justify-between">
-                <NavLink
-                  to="/"
-                  end
-                  className={({ isActive }) =>
-                    `flex flex-col w-20 items-center justify-center gap-1 px-3 py-2 rounded-xl text-sm ${
-                      isActive
-                        ? "bg-gray-100 text-sky-900"
-                        : "text-gray-500 hover:bg-gray-50"
-                    }`
-                  }
-                >
-                  <i className="bx bxs-home text-xl" />
-                  <span className="text-xs">Home</span>
-                </NavLink>
-
-                <NavLink
-                  to="/dompet"
-                  className={({ isActive }) =>
-                    `flex flex-col w-20 items-center justify-center gap-1 px-3 py-2 rounded-xl text-sm ${
-                      isActive
-                        ? "bg-gray-100 text-sky-900"
-                        : "text-gray-500 hover:bg-gray-50"
-                    }`
-                  }
-                >
-                  <i className="bx bxs-wallet text-xl" />
-                  <span className="text-xs">Wallet</span>
-                </NavLink>
-
-                <NavLink
-                  to="/downline"
-                  className={({ isActive }) =>
-                    `flex flex-col w-20 items-center justify-center gap-1 px-3 py-2 rounded-xl text-sm ${
-                      isActive
-                        ? "bg-gray-100 text-sky-900"
-                        : "text-gray-500 hover:bg-gray-50"
-                    }`
-                  }
-                >
-                  <i className="bx bx-git-branch text-xl downline-icon" />
-                  <span className="text-xs">Downline</span>
-                </NavLink>
-
-                <NavLink
-                  to="/produk"
-                  className={({ isActive }) =>
-                    `flex flex-col w-20 items-center justify-center gap-1 px-3 py-2 rounded-xl text-sm ${
-                      isActive
-                        ? "bg-gray-100 text-sky-900"
-                        : "text-gray-500 hover:bg-gray-50"
-                    }`
-                  }
-                >
-                  <i className="bx bxs-package text-xl" />
-                  <span className="text-xs">Product</span>
-                </NavLink>
+              <nav className="flex justify-between gap-1">
+                {(navItems ?? []).map(({ to, icon, label }) => (
+                  <NavLink
+                    key={to}
+                    to={to}
+                    end={to === "/"}
+                    className={({ isActive }) =>
+                      `flex flex-col w-full items-center justify-center gap-1 px-3 py-2 rounded-xl text-sm ${
+                        isActive
+                          ? "bg-gray-100 text-sky-900"
+                          : "text-gray-500 hover:bg-gray-50"
+                      }`
+                    }
+                  >
+                    <i className={`${icon} text-xl`} />
+                    <span className="text-xs">{label}</span>
+                  </NavLink>
+                ))}
               </nav>
             </div>
           )}

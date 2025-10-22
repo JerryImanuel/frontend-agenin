@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import { useToken } from "../../context/AuthContext";
 import { login } from "../../services/AuthAPI";
 
+import { fetchUserProfile } from "../../services/AuthAPI/getProfile";
+import { toRole } from "../../context/AuthContext";
+
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -24,13 +27,21 @@ export default function Login() {
         userIdentifier: username,
         userPassword: password,
       });
-      console.log(res);
 
       changeUser({
         ...user,
         accessToken: res.results.token,
         userId: res.results.userId,
         userFullName: res.results.userFullName,
+      });
+
+      const profile = await fetchUserProfile();
+
+      changeUser({
+        accessToken: res.results.token,
+        userId: res.results.userId,
+        userFullName: profile.userFullName,
+        roleName: toRole(profile.roleName),
       });
     } catch (e: any) {
       setErr(

@@ -8,11 +8,19 @@ import {
   type ReactNode,
 } from "react";
 import { setAxiosConfig } from "../../services/api";
+import { fetchUserProfile } from "../../services/AuthAPI/getProfile";
+
+export type Role = "ADMIN" | "AGENT";
 
 export interface User {
   accessToken: string;
   userId?: string;
   userFullName?: string;
+  roleName?: Role;
+}
+
+function toRole(v: unknown): Role | undefined {
+  return v === "ADMIN" || v === "AGENT" ? v : undefined;
 }
 
 interface Context {
@@ -75,6 +83,27 @@ export const TokenProvider = ({ children }: Readonly<Props>) => {
   useEffect(() => {
     if (user?.accessToken) {
       setAxiosConfig(user.accessToken);
+
+      if (!user.roleName) {
+        (async () => {
+          try {
+            const p = await fetchUserProfile();
+            setUser((prev) => {
+              if (!prev) return prev;
+              const merged = {
+                ...prev,
+                userId: p.userId,
+                userFullName: p.userFullName,
+                roleName: toRole(p.roleName),
+              };
+              localStorage.setItem("user", JSON.stringify(merged));
+              return merged;
+            });
+          } catch {
+            // optional: Notifikasi Logout
+          }
+        })();
+      }
     }
   }, [user]);
 
@@ -92,3 +121,5 @@ export const useToken = () => {
   }
   return context;
 };
+
+export { toRole };

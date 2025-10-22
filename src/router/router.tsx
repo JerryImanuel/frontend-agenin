@@ -6,9 +6,10 @@ import ProtectedRoute from "./ProtectedRoute";
 import Dashboard from "../pages/Dashboard";
 import Dompet from "../pages/Dompet";
 import Downline from "../pages/Downline";
-import DownlineDetail from "../pages/DownlineDetail";
 import Produk from "../pages/Produk";
 import Profile from "../pages/Profile";
+
+import RoleRoute from "./RoleRoute";
 
 export const router = createBrowserRouter([
   {
@@ -21,10 +22,35 @@ export const router = createBrowserRouter([
           { path: "login", element: <Login /> },
           { path: "register", element: <Register /> },
           { index: true, element: <Dashboard /> },
-          { path: "dompet", element: <Dompet /> },
-          { path: "downline", element: <Downline /> },
-          { path: "/downline/:inviteeUserId", element: <DownlineDetail /> },
-          { path: "produk", element: <Produk /> },
+
+          // UPDATE: dompet hanya untuk AGENT
+          {
+            path: "dompet",
+            element: (
+              <RoleRoute roles={["AGENT"]}>
+                <Dompet />
+              </RoleRoute>
+            ),
+          },
+
+          // downline & produk untuk ADMIN dan AGENT
+          {
+            path: "downline",
+            element: (
+              <RoleRoute roles={["ADMIN", "AGENT"]}>
+                <Downline />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: "produk",
+            element: (
+              <RoleRoute roles={["ADMIN", "AGENT"]}>
+                <Produk />
+              </RoleRoute>
+            ),
+          },
+
           { path: "profile", element: <Profile /> },
         ],
       },
