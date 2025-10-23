@@ -1,5 +1,6 @@
 import type { UserProfileResponse } from "../../types/User/userprofile";
-import { getToken, getUserIdFromAuth } from "../../utils/auth";
+import { getUserIdFromAuth } from "../../utils/auth";
+import API from "../api";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8989";
 const PROFILE_PATH = "/api/v1/user/profile";
@@ -7,7 +8,6 @@ const PROFILE_PATH = "/api/v1/user/profile";
 export async function fetchUserProfile(): Promise<
   UserProfileResponse["results"]
 > {
-  const token = getToken();
   const userId = getUserIdFromAuth();
 
   if (!userId) {
@@ -16,29 +16,30 @@ export async function fetchUserProfile(): Promise<
     );
   }
 
-  const res = await fetch(`${BASE_URL}${PROFILE_PATH}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "X-User-ID": userId,
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-  });
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(
-      `Gagal fetch profile (${res.status}): ${text || res.statusText}`
+  try {
+    const { data } = await API.get<UserProfileResponse>(
+      `${BASE_URL}${PROFILE_PATH}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-USER-ID": userId,
+        },
+      }
     );
+
+    if (!data?.results) {
+      const msg =
+        data?.message || data?.error || "Response tidak berisi data profile.";
+      throw new Error(msg);
+    }
+
+    return data.results;
+  } catch (err: any) {
+    const msg =
+      err?.response?.data?.message ||
+      err?.response?.data?.error ||
+      err?.message ||
+      "Gagal mengambil data profil.";
+    throw new Error(msg);
   }
-
-  const data = (await res.json()) as UserProfileResponse;
-
-  if (!data.results) {
-    throw new Error(
-      data.error || data.message || "Response tidak berisi data profile"
-    );
-  }
-
-  return data.results;
 }

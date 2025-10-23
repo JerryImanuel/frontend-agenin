@@ -6,12 +6,18 @@ type WalletInfoProps = {
 };
 
 export default function WalletInfo({
-  balance,
+  balance = 0,
   loading = false,
   error = null,
+  className = "",
 }: WalletInfoProps) {
   return (
-    <div className="card bg-sky-900 text-white py-4 px-5 rounded-2xl shadow w-full transition">
+    <div
+      className={[
+        "card bg-sky-900 text-white py-4 px-5 rounded-2xl shadow w-full transition",
+        className,
+      ].join(" ")}
+    >
       {loading ? (
         <div className="flex items-center justify-center h-12">
           <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent" />

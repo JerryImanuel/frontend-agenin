@@ -105,7 +105,7 @@ export const TokenProvider = ({ children }: Readonly<Props>) => {
         })();
       }
     }
-  }, [user]);
+  }, []);
 
   return (
     <TokenContext.Provider value={tokenContextValue}>

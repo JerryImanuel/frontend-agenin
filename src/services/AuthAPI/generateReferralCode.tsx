@@ -16,7 +16,7 @@ export interface UserProfileResponse {
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8989";
 const REFERRAL_PATH_PREFIX = "/api/v1/user/referral-code";
 
-export async function generateReferralCode(userId: string, token?: string) {
+export async function generateReferralCode(userId: string) {
   if (!userId) throw new Error("userId wajib diisi.");
 
   try {
@@ -26,7 +26,6 @@ export async function generateReferralCode(userId: string, token?: string) {
       {
         headers: {
           "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
       }
     );
