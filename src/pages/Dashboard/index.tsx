@@ -55,7 +55,6 @@ const Dashboard = () => {
         const userId = getUserIdFromAuth();
         if (!userId) throw new Error("User not logged in.");
 
-        // 🔹 Balance & Wallet
         setLoadingBalance(true);
         const bw = await getUserBalanceAndWallet(userId);
         const { userBalanceAmount, userWalletAmount } = bw.results ?? {
@@ -123,7 +122,7 @@ const Dashboard = () => {
       {/* Wallet Section */}
       <div
         className="py-2 cursor-pointer active:scale-[0.98] transition"
-        onClick={() => navigate("/wallet")}
+        onClick={() => navigate("/dompet")}
       >
         <div className="px-5 pt-0">
           <WalletInfo

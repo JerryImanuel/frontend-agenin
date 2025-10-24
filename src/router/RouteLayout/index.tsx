@@ -41,7 +41,7 @@ export default function RootLayout() {
   }
 
   if (!isAuthRoute && location.pathname === "/" && role === "ADMIN") {
-    return <Navigate to="/downline" replace />;
+    return <Navigate to="/produk" replace />;
   }
 
   return (
