@@ -154,67 +154,30 @@ const Dashboard = () => {
           <p className="font-medium text-sm">Customer Info</p>
         </div>
 
-        <div className="card bg-white text-primary p-3 rounded-2xl shadow-lg">
+        <div>
           {loadingTrx ? (
-            <div className="text-xs text-gray-500">Loading customer info…</div>
+            <div className="card bg-white text-primary p-3 rounded-2xl shadow-lg">
+              <div className="text-xs text-gray-500">
+                Loading customer info…
+              </div>
+            </div>
           ) : errorTrx ? (
-            <div className="text-xs text-red-600">Error: {errorTrx}</div>
+            <div className="card bg-white text-primary p-3 rounded-2xl shadow-lg">
+              <div className="text-xs text-red-600">Error: {errorTrx}</div>
+            </div>
           ) : sortedTransactions.length === 0 ? (
-            <div className="text-xs text-gray-500">
-              No customer info available.
+            <div className="card bg-white text-primary p-3 rounded-2xl shadow-lg">
+              <div className="text-xs text-gray-500">
+                No customer info available.
+              </div>
             </div>
           ) : (
             <>
-              {/* Desktop Table */}
-              <div className="hidden md:block overflow-auto">
-                <table className="min-w-full text-sm">
-                  <thead>
-                    <tr className="text-left text-gray-500 border-b">
-                      <th className="py-2 pr-4">Date</th>
-                      <th className="py-2 pr-4">Product</th>
-                      <th className="py-2 pr-4">Deposit</th>
-                      <th className="py-2 pr-4">Customer</th>
-                      <th className="py-2 pr-4">Contact</th>
-                      <th className="py-2 pr-4">Address</th>
-                      <th className="py-2 pr-4">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {sortedTransactions.map((t, idx) => (
-                      <tr key={idx} className="border-b last:border-0">
-                        <td className="py-2 pr-4 whitespace-nowrap">
-                          {formatDate(t.transactionDate)}
-                        </td>
-                        <td className="py-2 pr-4">{t.productName}</td>
-                        <td className="py-2 pr-4 font-medium">
-                          {currency(Number(t.productPrice || 0))}
-                        </td>
-                        <td className="py-2 pr-4">{t.customerName || "-"}</td>
-                        <td className="py-2 pr-4 text-xs text-gray-600">
-                          {t.customerPhoneNumber || "-"}
-                          <br />
-                          {t.customerEmail || "-"}
-                        </td>
-                        <td className="py-2 pr-4 text-xs text-gray-600">
-                          {t.customerAddress || "-"}
-                        </td>
-                        <td className="py-2 pr-4">
-                          <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg text-[11px]">
-                            {t.transactionStatus || "-"}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Mobile Cards */}
-              <div className="md:hidden space-y-3">
+              <div>
                 {sortedTransactions.map((t, idx) => (
                   <div
                     key={idx}
-                    className="rounded-2xl border border-gray-200 p-3 shadow-sm"
+                    className="card bg-white text-primary p-3 mb-2 rounded-2xl shadow-lg"
                   >
                     <div className="flex items-center justify-between">
                       <div className="text-sm font-semibold">
