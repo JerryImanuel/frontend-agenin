@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "../api";
 
 export type DownlineUser = {
   inviteeUserId: string;
@@ -10,15 +10,17 @@ export interface DownlineResponse {
   status: number;
   message: string;
   error: string | null;
-  results: DownlineUser;
+  results: DownlineUser[] | null;
 }
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8989";
-const DOWNLINE_PATH = "/api/v1/user/downline";
+const DOWNLINE_PATH = "/api/v1/user/downlines";
 
+// Normalizer: dukung dua bentuk payload (flat & *DTO)
 function normalizeOne(o: any): DownlineUser | null {
   if (!o) return null;
 
+  // Bentuk flat
   if (o.inviteeUserId || o.inviteeUserFullName || o.inviteeCommissionValue) {
     return {
       inviteeUserId: String(o.inviteeUserId ?? ""),
@@ -27,6 +29,7 @@ function normalizeOne(o: any): DownlineUser | null {
     };
   }
 
+  // Bentuk DTO backend
   const idDTO = o?.usersReferralEntityDTOInviteeUserId;
   const nameDTO = o?.usersReferralEntityDTOInviteeUserFullName;
   const commDTO = o?.usersReferralEntityDTOInviteeCommissionValue;
@@ -47,34 +50,35 @@ function normalizeArray(arr: any): DownlineUser[] {
   return arr.map(normalizeOne).filter(Boolean) as DownlineUser[];
 }
 
+/**
+ * Ambil downline by referenceUserId.
+ * - 200 + results[]: kembalikan list
+ * - 404 "Downline not found": kembalikan []
+ * - 500/unknown: lempar Error dg pesan backend
+ */
 export async function getUserDownline(
-  referenceUserId: string,
-  token?: string
+  referenceUserId: string
 ): Promise<DownlineUser[]> {
   if (!referenceUserId) throw new Error("referenceUserId is required.");
 
   try {
-    const { data } = await axios.get<DownlineResponse>(
-      `${BASE_URL}${DOWNLINE_PATH}/${referenceUserId}`,
+    const { data } = await API.get<DownlineResponse>(
+      `${BASE_URL}${DOWNLINE_PATH}`,
       {
         headers: {
           "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          "X-REFERENCE-USER-ID": referenceUserId,
         },
       }
     );
 
-    const raw =
-      (data as any)?.results ?? (data as any)?.restAPIResponseResults ?? null;
-
-    const list = normalizeArray(raw);
-    if (list.length >= 0) return list;
-
-    return [];
+    const raw = data?.results ?? (data as any)?.restAPIResponseResults ?? null;
+    return normalizeArray(raw);
   } catch (err: any) {
     const res = err?.response;
     const body = res?.data;
 
+    // Coba normalisasi data error kalau backend tetap kirim "results" di error
     const rawErr =
       body?.results ??
       body?.restAPIResponseResults ??
@@ -83,19 +87,25 @@ export async function getUserDownline(
     const fromErr = normalizeArray(rawErr);
     if (fromErr.length > 0) return fromErr;
 
-    const msgText: string = body?.message || body?.error || err?.message || "";
+    const msg: string =
+      body?.message ||
+      body?.restAPIResponseMessage ||
+      body?.error ||
+      err?.message ||
+      "Failed to fetch user downline.";
+
+    // ✅ Treat 404 (not found) sebagai list kosong
+    if (res?.status === 404) return [];
+
+    // ✅ Tangani pesan dalam bahasa Inggris/Indonesia
+    const lc = msg.toLowerCase();
     if (
-      typeof msgText === "string" &&
-      msgText.toLowerCase().includes("downline tidak ditemukan")
+      lc.includes("downline not found") ||
+      lc.includes("downline tidak ditemukan")
     ) {
       return [];
     }
 
-    const msg =
-      body?.message ||
-      body?.error ||
-      err?.message ||
-      "Failed to fetch user downline.";
     throw new Error(msg);
   }
 }

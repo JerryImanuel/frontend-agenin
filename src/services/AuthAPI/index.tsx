@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export type LoginPayload = {
   userIdentifier: string;
   userPassword: string;
@@ -27,27 +29,22 @@ class AuthError extends Error {
 
 export async function login(payload: LoginPayload): Promise<LoginResponse> {
   try {
-    const res = await fetch(`${BASE}/api/v1/user/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (!res.ok) {
-      let apiMsg: string | undefined;
-      try {
-        const data = await res.json();
-        apiMsg = typeof data?.message === "string" ? data.message : undefined;
-      } catch {}
-      throw new AuthError(res.status, apiMsg);
-    }
-
-    return res.json();
-  } catch (err: any) {
-    if (err instanceof AuthError) throw err;
-    throw new AuthError(
-      0,
-      "Gagal terhubung ke server. Periksa koneksi internet kamu."
+    const { data } = await axios.post<LoginResponse>(
+      `${BASE}/api/v1/user/login`,
+      payload,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
     );
+
+    return data;
+  } catch (err: any) {
+    const status = err.response?.status ?? 0;
+    const apiMsg =
+      typeof err.response?.data?.message === "string"
+        ? err.response.data.message
+        : "Gagal terhubung ke server. Periksa koneksi internet kamu.";
+
+    throw new AuthError(status, apiMsg);
   }
 }
