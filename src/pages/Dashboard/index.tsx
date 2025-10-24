@@ -173,11 +173,11 @@ const Dashboard = () => {
             </div>
           ) : (
             <>
-              <div>
+              <div className="h-75 overflow-y-auto">
                 {sortedTransactions.map((t, idx) => (
                   <div
                     key={idx}
-                    className="card bg-white text-primary p-3 mb-2 rounded-2xl shadow-lg"
+                    className="card bg-white text-primary p-4 mb-2 rounded-2xl shadow-lg"
                   >
                     <div className="flex items-center justify-between">
                       <div className="text-sm font-semibold">
