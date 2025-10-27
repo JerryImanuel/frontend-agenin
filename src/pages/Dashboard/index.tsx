@@ -151,12 +151,12 @@ const Dashboard = () => {
       {/* Customer Info */}
       <div className="mt-4 px-5">
         <div className="flex items-center justify-between mb-3">
-          <p className="font-medium text-sm">Customer Info</p>
+          <p className="font-medium text-sm">Customer Transaction</p>
         </div>
 
-        <div>
+        <div className="card">
           {loadingTrx ? (
-            <div className="card bg-white text-primary p-3 rounded-2xl shadow-lg">
+            <div className="card bg-white text-primary p-3 rounded-2xl shadow-sm">
               <div className="text-xs text-gray-500">
                 Loading customer info…
               </div>
@@ -166,45 +166,53 @@ const Dashboard = () => {
               <div className="text-xs text-red-600">Error: {errorTrx}</div>
             </div>
           ) : sortedTransactions.length === 0 ? (
-            <div className="card bg-white text-primary p-3 rounded-2xl shadow-lg">
+            <div className="card bg-white text-primary p-3 rounded-2xl shadow-sm">
               <div className="text-xs text-gray-500">
                 No customer info available.
               </div>
             </div>
           ) : (
             <>
-              <div className="h-75 overflow-y-auto">
+              <div className="bg-white py-3 px-4 rounded-2xl shadow-sm h-70 overflow-auto">
                 {sortedTransactions.map((t, idx) => (
                   <div
                     key={idx}
-                    className="card bg-white text-primary p-4 mb-2 rounded-2xl shadow-lg"
+                    className="text-primary border-b-1 border-gray-300 py-3"
                   >
                     <div className="flex items-center justify-between">
-                      <div className="text-sm font-semibold">
+                      <div className="text-xs font-semibold">
                         {t.productName}
                       </div>
                       <div className="text-xs text-gray-500">
                         {formatDate(t.transactionDate)}
                       </div>
                     </div>
-                    <div className="text-xs mt-1 text-gray-600">
-                      Deposit:{" "}
-                      <span className="font-medium">
+                    <div className="flex flex-row items-center justify-between mt-1">
+                      <span className="text-xs text-gray-600 ">
+                        Min. Deposit
+                      </span>
+                      <span className="font-semibold text-sky-950">
                         {currency(Number(t.productPrice || 0))}
                       </span>
                     </div>
+                    <hr className="border-dashed my-2 border-gray-200" />
+
                     <div className="mt-2 text-xs">
-                      <div className="font-medium">{t.customerName || "-"}</div>
-                      <div className="text-gray-500">
-                        {t.customerPhoneNumber || "-"} ·{" "}
+                      <div className="flex flex-row items-center justify-between">
+                        <div className="font-medium">
+                          {t.customerName || "-"}
+                        </div>
+                        <div>{t.customerPhoneNumber || "-"} · </div>
+                      </div>
+                      <div className="text-gray-500 mt-1">
                         {t.customerEmail || "-"}
                       </div>
-                      <div className="text-gray-500 text-[11px]">
+                      <div className="text-gray-500 text-[11px] truncate max-w-[300px] mt-1">
                         {t.customerAddress || "-"}
                       </div>
                     </div>
                     <div className="mt-2">
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg text-[11px]">
+                      <span className="bg-blue-200 text-sky-800 px-2 py-1 rounded-lg text-[11px]">
                         {t.transactionStatus || "-"}
                       </span>
                     </div>

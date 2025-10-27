@@ -26,16 +26,12 @@ export default function DownlineTable({ data }: DownlineTableProps) {
             idx % 2 === 0 ? "bg-gray-50" : "bg-white"
           }`}
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-start justify-between">
             <div>
               <p className="text-[10px] text-gray-500">Downline Name</p>
               <p className="text-sm text-sky-900 font-medium">
                 {d.inviteeUserFullName}
               </p>
-            </div>
-            <div className="text-right">
-              <p className="text-[10px] text-gray-500">Commission Downline</p>
-              <span className="font-medium text-gray-700">Rp 1.000.000</span>
             </div>
           </div>
 
