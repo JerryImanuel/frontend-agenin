@@ -22,7 +22,7 @@ export default function DownlineTable({ data }: DownlineTableProps) {
       {data.map((d, idx) => (
         <div
           key={d.inviteeUserId}
-          className={`p-3 border-b border-gray-300 ${
+          className={`p-3 border-b border-gray-200 ${
             idx % 2 === 0 ? "bg-gray-50" : "bg-white"
           }`}
         >
@@ -33,12 +33,11 @@ export default function DownlineTable({ data }: DownlineTableProps) {
                 {d.inviteeUserFullName}
               </p>
             </div>
-          </div>
-
-          <div className="w-full py-1 mt-2 border-t border-slate-200">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] text-gray-500">Your Commission</span>
-              <div className="font-semibold text-emerald-600 flex items-center gap-1">
+            <div>
+              <p className="text-[10px] text-gray-500 text-right">
+                Your Commission
+              </p>
+              <div className="font-semibold text-emerald-700 flex items-center gap-1 justify-end">
                 <i className="bx bx-plus text-[15px]" />
                 <span className="text-sm">
                   Rp {d.inviteeCommissionValue.toLocaleString("id-ID")}
