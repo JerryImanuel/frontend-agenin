@@ -32,10 +32,11 @@ export default function DownlineCarousel({ data }: Props) {
         {data.map((d) => (
           <div
             key={d.inviteeUserId}
-            className="
-              snap-start shrink-0
-              w-[95%] rounded-2xl bg-white p-4 shadow-sm
-            "
+            className={`
+            snap-start shrink-0
+            ${displayData.length === 1 ? "w-full" : "w-[300px]"}
+            rounded-2xl bg-white p-4 shadow-sm
+          `}
           >
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
