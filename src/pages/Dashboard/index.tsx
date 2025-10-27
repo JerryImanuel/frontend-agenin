@@ -173,7 +173,7 @@ const Dashboard = () => {
             </div>
           ) : (
             <>
-              <div className="bg-white py-3 px-4 rounded-2xl shadow-sm h-70 overflow-auto">
+              <div className="bg-white py-3 px-4 rounded-2xl shadow-sm mb-5">
                 {sortedTransactions.map((t, idx) => (
                   <div
                     key={idx}
