@@ -202,7 +202,7 @@ const Dashboard = () => {
                         <div className="font-medium">
                           {t.customerName || "-"}
                         </div>
-                        <div>{t.customerPhoneNumber || "-"} · </div>
+                        <div>{t.customerPhoneNumber || "-"}</div>
                       </div>
                       <div className="text-gray-500 mt-1">
                         {t.customerEmail || "-"}
