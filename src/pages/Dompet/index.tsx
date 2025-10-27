@@ -5,6 +5,7 @@ import CommissionInfo from "../../components/CommissionInfo";
 import PageAlertTop from "../../components/PageAlertTop";
 import { getUserIdFromAuth } from "../../utils/auth";
 import { getUserBalanceAndWallet } from "../../services/AuthAPI/getWalletandBalance";
+// ⬇️ pakai file service yang baru
 import { commissionToWallet } from "../../services/AuthAPI/balanceToWallet";
 
 export default function Dompet() {
@@ -16,6 +17,7 @@ export default function Dompet() {
   const [errorBW, setErrorBW] = useState<string | null>(null);
 
   const [amountStr, setAmountStr] = useState("");
+  const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
@@ -28,7 +30,6 @@ export default function Dompet() {
       const userId = getUserIdFromAuth();
       if (!userId) throw new Error("User not logged in.");
 
-      // Service sudah menormalisasi ke number/string di results
       const resp = await getUserBalanceAndWallet(userId);
       const { userBalanceAmount, userWalletAmount } = resp.results ?? {
         userBalanceAmount: 0,
@@ -54,22 +55,22 @@ export default function Dompet() {
     }
   }
 
-  // Fetch pertama kali
   useEffect(() => {
     fetchBalanceAndWallet();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Submit top up → pakai commissionToWallet service baru
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Bersihkan input: izinkan desimal, hapus karakter lain
     const cleaned = amountStr.replace(/[^\d.]/g, "");
     const amount = Number(cleaned);
 
     if (!Number.isFinite(amount) || amount < 0.01) {
       showAlert("Minimal transfer adalah 0.01.", "error");
+      return;
+    }
+    if (!password.trim()) {
+      showAlert("Password wajib diisi.", "error");
       return;
     }
 
@@ -78,11 +79,12 @@ export default function Dompet() {
       const userId = getUserIdFromAuth();
       if (!userId) throw new Error("User not logged in.");
 
-      const resp = await commissionToWallet(userId, cleaned);
+      const resp = await commissionToWallet(userId, cleaned, password);
       showAlert(resp.message || "Transfer berhasil.", "success");
-      setAmountStr("");
 
-      // refresh angka dari backend
+      setAmountStr("");
+      setPassword("");
+
       fetchBalanceAndWallet();
     } catch (err: any) {
       showAlert(err?.message ?? "Transfer gagal.", "error");
@@ -95,7 +97,6 @@ export default function Dompet() {
     <div className="px-5 py-2">
       <PageAlertTop />
 
-      {/* commissions ← results.userBalanceAmount */}
       <CommissionInfo
         commission={commissionDisplay}
         loading={loadingBW}
@@ -103,10 +104,8 @@ export default function Dompet() {
         className="mb-2"
       />
 
-      {/* wallet/balance ← results.userWalletAmount */}
       <WalletInfo balance={walletDisplay} loading={loadingBW} error={errorBW} />
 
-      {/* ⬇️ Bagian Top Up Balance */}
       <div className="mt-4">
         <p className="text-sm font-medium mb-3">
           Top Up Balance from Commission
@@ -130,6 +129,7 @@ export default function Dompet() {
               setAmountStr(e.target.value.replace(/[^\d.]/g, ""))
             }
             required
+            inputMode="decimal"
           />
 
           <div className="relative mb-3">
@@ -139,6 +139,8 @@ export default function Dompet() {
               placeholder="Password"
               required
               name="userPassword"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
             <button
               type="button"
