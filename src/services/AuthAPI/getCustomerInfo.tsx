@@ -32,15 +32,13 @@ export async function getAllTransactionsByUser(
       {
         headers: {
           "Content-Type": "application/json",
-          "X-USER-ID": userId, // UUID user
+          "X-USER-ID": userId,
         },
       }
     );
 
-    // Pastikan results selalu array
     const raw = Array.isArray(data.results) ? data.results : [];
 
-    // Normalisasi hasil
     const normalizedResults: CustomerOpenBankAccount[] = raw.map((t) => ({
       productName: t.productName ?? "",
       productPrice:

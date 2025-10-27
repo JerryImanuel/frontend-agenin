@@ -31,7 +31,6 @@ export async function getUserBalanceAndWallet(
       }
     );
 
-    // 🔹 Normalisasi nilai agar BigDecimal/string dari backend dikonversi ke number
     const r = data?.results ?? ({} as UserBalanceAndWallet);
 
     const normalizedResults: UserBalanceAndWallet = {
@@ -45,7 +44,6 @@ export async function getUserBalanceAndWallet(
           : r.userWalletAmount ?? 0,
     };
 
-    // 🔹 Return dengan struktur yang sesuai interface
     return {
       status: data.status ?? 200,
       message: data.message ?? "SUCCESS GET user balance and wallet",
