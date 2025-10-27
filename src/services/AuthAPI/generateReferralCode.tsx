@@ -6,7 +6,7 @@ export type ReferralCode = {
   userReferralCreatedAt: string;
 };
 
-export interface UserProfileResponse {
+export interface ReferralCodeResponse {
   status: number;
   message: string;
   error: string | null;
@@ -20,7 +20,7 @@ export async function generateReferralCode(userId: string) {
   if (!userId) throw new Error("userId wajib diisi.");
 
   try {
-    const { data } = await API.post<UserProfileResponse>(
+    const { data } = await API.post<ReferralCodeResponse>(
       `${BASE_URL}${REFERRAL_PATH_PREFIX}`,
       null,
       {
