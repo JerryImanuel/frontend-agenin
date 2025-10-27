@@ -10,15 +10,15 @@ import { commissionToWallet } from "../../services/AuthAPI/balanceToWallet";
 export default function Dompet() {
   const { showAlert } = useAlert();
 
-  // State tampilan dari service balance-wallet
-  const [commissionDisplay, setCommissionDisplay] = useState<number>(0); // results.userBalanceAmount
-  const [walletDisplay, setWalletDisplay] = useState<number>(0); // results.userWalletAmount
+  const [commissionDisplay, setCommissionDisplay] = useState<number>(0);
+  const [walletDisplay, setWalletDisplay] = useState<number>(0);
   const [loadingBW, setLoadingBW] = useState<boolean>(true);
   const [errorBW, setErrorBW] = useState<string | null>(null);
 
-  // Form top up
   const [amountStr, setAmountStr] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   async function fetchBalanceAndWallet() {
     try {
@@ -123,7 +123,7 @@ export default function Dompet() {
 
         <form onSubmit={onSubmit}>
           <input
-            className="w-full border text-xs border-gray-300 rounded-xl px-3 py-3 mb-3 focus:outline-none focus:ring-2 focus:ring-sky-900"
+            className="w-full border text-xs border-gray-300 rounded-xl px-3 py-3 mb-2 focus:outline-none focus:ring-2 focus:ring-sky-900"
             placeholder="Fill Amount (min 0.01)"
             value={amountStr}
             onChange={(e) =>
@@ -131,6 +131,30 @@ export default function Dompet() {
             }
             required
           />
+
+          <div className="relative mb-3">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="w-full border text-xs bg-white border-gray-300 rounded-xl px-3 py-3 mb-1 focus:outline-none focus:ring-2 focus:ring-sky-900"
+              placeholder="Password"
+              required
+              name="userPassword"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none mb-1"
+              aria-label={showPassword ? "Hide Password" : "Show Password"}
+            >
+              <i
+                className={`bx ${
+                  showPassword
+                    ? "bx-show text-sky-900"
+                    : "bx-hide text-gray-400"
+                } text-lg`}
+              />
+            </button>
+          </div>
 
           <button
             type="submit"
