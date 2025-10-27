@@ -45,8 +45,8 @@ export default function RootLayout() {
   }
 
   return (
-    <div className="h-screen bg-sky-950 flex items-center justify-center p-4">
-      <div className="relative w-[360px] h-[100dvh] max-h-[690px] bg-header rounded-xl shadow-2xl border border-gray-300 overflow-hidden">
+    <div className="h-screen">
+      <div className="relative h-screen bg-header rounded-xl shadow-2xl border border-gray-300 overflow-hidden">
         <div className="flex flex-col h-full">
           {!isAuthRoute && (
             <HeaderBar
