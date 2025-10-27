@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "../api";
 
 export type ReferralCode = {
   userReferralId: string;
@@ -20,12 +20,13 @@ export async function generateReferralCode(userId: string) {
   if (!userId) throw new Error("userId wajib diisi.");
 
   try {
-    const { data } = await axios.post<UserProfileResponse>(
+    const { data } = await API.post<UserProfileResponse>(
       `${BASE_URL}${REFERRAL_PATH_PREFIX}`,
       null,
       {
         headers: {
           "Content-Type": "application/json",
+          "X-User-ID": userId,
         },
       }
     );
@@ -39,7 +40,7 @@ export async function generateReferralCode(userId: string) {
       err?.response?.data?.message ||
       err?.response?.data?.error ||
       err?.message ||
-      "Gagal generate referral code";
+      "Gagal generate referral code.";
 
     throw new Error(apiMsg);
   }
