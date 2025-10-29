@@ -60,6 +60,10 @@ export default function Register() {
     if (step === 3) setStep(2);
   };
 
+  const handleBackToLogin = () => {
+    navigate("/login");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setTouched(true);
@@ -136,6 +140,7 @@ export default function Register() {
         className="h-full flex flex-col justify-between"
       >
         <div className="px-2">
+          {/* --- Step 1 --- */}
           {step === 1 && (
             <>
               <div className="mb-3">
@@ -195,6 +200,7 @@ export default function Register() {
             </>
           )}
 
+          {/* --- Step 2 --- */}
           {step === 2 && (
             <div className="mb-3">
               <label className="block text-xs font-medium mb-2">
@@ -209,6 +215,7 @@ export default function Register() {
             </div>
           )}
 
+          {/* --- Step 3 --- */}
           {step === 3 && (
             <>
               <div className="mb-3">
@@ -298,6 +305,15 @@ export default function Register() {
             </button>
           )}
         </div>
+
+        {/* Tombol Back to Login */}
+        <button
+          type="button"
+          onClick={handleBackToLogin}
+          className="mt-4 text-center text-sm text-sky-900 hover:underline"
+        >
+          Back to Login
+        </button>
       </form>
     </div>
   );

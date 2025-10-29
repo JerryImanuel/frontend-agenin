@@ -25,7 +25,7 @@ export const router = createBrowserRouter([
 
           // UPDATE: dompet hanya untuk AGENT
           {
-            path: "dompet",
+            path: "wallet",
             element: (
               <RoleRoute roles={["AGENT"]}>
                 <Dompet />
@@ -43,7 +43,7 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: "produk",
+            path: "product",
             element: (
               <RoleRoute roles={["ADMIN", "AGENT"]}>
                 <Produk />

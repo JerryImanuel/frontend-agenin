@@ -5,13 +5,13 @@ import { useToken } from "../../context/AuthContext";
 const NAV_BY_ROLE = {
   ADMIN: [
     // { to: "/downline", icon: "bx bx-git-branch", label: "Downline" },
-    { to: "/produk", icon: "bx bxs-package", label: "Product" },
+    { to: "/product", icon: "bx bxs-package", label: "Product" },
   ],
   AGENT: [
     { to: "/", icon: "bx bxs-home", label: "Home" },
-    { to: "/dompet", icon: "bx bxs-wallet", label: "Wallet" },
+    { to: "/wallet", icon: "bx bxs-wallet", label: "Wallet" },
     { to: "/downline", icon: "bx bx-git-branch", label: "Downline" },
-    { to: "/produk", icon: "bx bxs-package", label: "Product" },
+    { to: "/product", icon: "bx bxs-package", label: "Product" },
   ],
 } as const;
 
@@ -30,11 +30,11 @@ export default function RootLayout() {
   let showGreeting = false;
   if (location.pathname === "/") {
     showGreeting = true;
-  } else if (location.pathname.startsWith("/dompet")) {
+  } else if (location.pathname.startsWith("/wallet")) {
     headerTitle = "Wallet";
   } else if (location.pathname.startsWith("/downline")) {
     headerTitle = "Downline";
-  } else if (location.pathname.startsWith("/produk")) {
+  } else if (location.pathname.startsWith("/product")) {
     headerTitle = "Product";
   } else if (location.pathname.startsWith("/profile")) {
     headerTitle = "Profile";

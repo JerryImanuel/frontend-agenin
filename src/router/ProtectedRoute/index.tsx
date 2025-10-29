@@ -7,7 +7,7 @@ const ProtectedRoutes = () => {
   const { user } = useToken();
   console.log(user?.accessToken, "accs");
 
-  const tokenProtected = ["/", "/dompet", "/downline", "/produk", "/profile"];
+  const tokenProtected = ["/", "/wallet", "/downline", "/product", "/profile"];
   const auth = ["/login", "/register"];
 
   if (tokenProtected.includes(pathname)) {
