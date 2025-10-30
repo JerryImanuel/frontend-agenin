@@ -27,7 +27,11 @@ export default function Register() {
     return e;
   }, [s1]);
 
-  const s2Error = useMemo(() => ({}), [s2]);
+  // Optional referral: tidak ada error
+  const s2Error = useMemo(
+    () => ({} as Partial<Record<keyof Step2, string>>),
+    [s2]
+  );
 
   const s3Error = useMemo(() => {
     const e: Partial<Record<keyof Step3, string>> = {};
@@ -48,6 +52,7 @@ export default function Register() {
   const canSubmit = Object.keys(s3Error).length === 0;
 
   const handleNext = () => {
+    // Biarkan tombol bisa diklik; pakai guard di sini agar error muncul.
     setTouched(true);
     if (step === 1 && !canNext1) return;
     if (step === 2 && !canNext2) return;
@@ -90,6 +95,7 @@ export default function Register() {
 
   return (
     <div className="p-5 h-full flex flex-col justify-between">
+      {/* Header */}
       <div className="flex flex-col items-center justify-center mb-8 mt-8">
         <img
           src="/src/assets/image/logo-agenin.png"
@@ -153,6 +159,7 @@ export default function Register() {
                   onChange={(e) =>
                     setS1((v) => ({ ...v, fullName: e.target.value }))
                   }
+                  onBlur={() => setTouched(true)}
                   placeholder="Enter your full name"
                   required
                 />
@@ -172,6 +179,7 @@ export default function Register() {
                   onChange={(e) =>
                     setS1((v) => ({ ...v, email: e.target.value }))
                   }
+                  onBlur={() => setTouched(true)}
                   placeholder="your@email.com"
                   required
                 />
@@ -190,6 +198,7 @@ export default function Register() {
                   onChange={(e) =>
                     setS1((v) => ({ ...v, phone: e.target.value }))
                   }
+                  onBlur={() => setTouched(true)}
                   placeholder="08xxxxxxxxxx"
                   required
                 />
@@ -210,8 +219,10 @@ export default function Register() {
                 className="w-full border text-sm bg-white border-gray-300 rounded-xl px-3 py-2 mb-1 focus:outline-none focus:ring-2 focus:ring-sky-900"
                 value={s2.referral}
                 onChange={(e) => setS2({ referral: e.target.value })}
+                onBlur={() => setTouched(true)}
                 placeholder="Enter referral code (optional)"
               />
+              {/* Tidak ada error untuk Step 2 karena optional */}
             </div>
           )}
 
@@ -229,6 +240,7 @@ export default function Register() {
                   onChange={(e) =>
                     setS3((v) => ({ ...v, password: e.target.value }))
                   }
+                  onBlur={() => setTouched(true)}
                   placeholder="At least 8 characters"
                 />
                 {touched && s3Error.password && (
@@ -249,6 +261,7 @@ export default function Register() {
                   onChange={(e) =>
                     setS3((v) => ({ ...v, confirm: e.target.value }))
                   }
+                  onBlur={() => setTouched(true)}
                   placeholder="Repeat your password"
                   required
                 />
@@ -264,56 +277,58 @@ export default function Register() {
           <p className="text-red-500 text-xs text-center mb-2">{submitError}</p>
         )}
 
-        <div className="flex items-center gap-2">
-          {step > 1 && (
-            <button
-              type="button"
-              onClick={handleBack}
-              className="w-full border-2 border-sky-900 text-sky-900 py-2 text-sm rounded-2xl hover:bg-sky-900 hover:text-white transition"
-            >
-              Back
-            </button>
-          )}
+        {/* Action Buttons */}
+        <div>
+          <div className="flex items-center gap-2">
+            {step > 1 && (
+              <button
+                type="button"
+                onClick={handleBack}
+                className="w-full border-2 border-sky-900 text-sky-900 py-2 text-sm rounded-2xl hover:bg-sky-900 hover:text-white transition"
+              >
+                Back
+              </button>
+            )}
 
-          {step < 3 ? (
+            {step < 3 ? (
+              <button
+                type="button"
+                onClick={handleNext}
+                aria-disabled={
+                  (step === 1 && !canNext1) || (step === 2 && !canNext2)
+                }
+                className={`w-full bg-sky-900 border-2 border-sky-900 text-white text-sm py-2 rounded-2xl font-normal transition ${
+                  (step === 1 && !canNext1) || (step === 2 && !canNext2)
+                    ? "opacity-50"
+                    : "hover:bg-sky-900"
+                }`}
+              >
+                Next
+              </button>
+            ) : (
+              <button
+                type="submit"
+                disabled={submitting} // ❗ hanya disable saat submitting
+                aria-disabled={!canSubmit || submitting} // untuk aksesibilitas + styling
+                className={`w-full bg-sky-900 border-2 border-sky-900 text-white text-sm py-2 rounded-2xl font-normal transition ${
+                  !canSubmit || submitting ? "opacity-50" : "hover:bg-sky-900"
+                }`}
+              >
+                {submitting ? "Processing..." : "Register"}
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center justify-center mb-2 mt-3">
             <button
               type="button"
-              onClick={handleNext}
-              aria-disabled={
-                (step === 1 && !canNext1) || (step === 2 && !canNext2)
-              }
-              className={`w-full bg-sky-900 border-2 border-sky-900 text-white text-sm py-2 rounded-2xl font-normal transition ${
-                (step === 1 && !canNext1) || (step === 2 && !canNext2)
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-sky-900"
-              }`}
+              onClick={handleBackToLogin}
+              className="mt-4 text-center text-sm text-sky-900 hover:underline"
             >
-              Next
+              Back to Login
             </button>
-          ) : (
-            <button
-              type="submit"
-              disabled={!canSubmit || submitting}
-              aria-disabled={!canSubmit || submitting}
-              className={`w-full bg-sky-900 border-2 border-sky-900 text-white text-sm py-2 rounded-2xl font-normal transition ${
-                !canSubmit || submitting
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-sky-900"
-              }`}
-            >
-              {submitting ? "Processing..." : "Register"}
-            </button>
-          )}
+          </div>
         </div>
-
-        {/* Tombol Back to Login */}
-        <button
-          type="button"
-          onClick={handleBackToLogin}
-          className="mt-4 text-center text-sm text-sky-900 hover:underline"
-        >
-          Back to Login
-        </button>
       </form>
     </div>
   );
