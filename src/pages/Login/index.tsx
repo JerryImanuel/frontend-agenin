@@ -111,8 +111,8 @@ export default function Login() {
             </div>
           )}
 
-          <div className="text-center">
-            <span className="text-xs">
+          <div className="text-center mt-5">
+            <span className="text-sm">
               Don't have an account yet? Please{" "}
               <Link
                 to="/register"
